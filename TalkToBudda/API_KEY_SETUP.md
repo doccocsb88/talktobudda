@@ -22,3 +22,4 @@ To use this app, you need to configure your OpenAI API key:
 - Never commit your actual API key to version control
 - The `Info.plist` file is already added to `.gitignore`
 - Use the template file (`Info.plist.template`) for sharing with other developers
+

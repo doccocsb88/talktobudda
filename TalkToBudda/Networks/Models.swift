@@ -34,15 +34,41 @@ struct OpenAIMessage: Encodable {
 
 // MARK: - OpenAI Response
 struct OpenAIResponse: Decodable {
+    let id: String?
+    let object: String?
+    let created: Int?
+    let model: String?
     let choices: [OpenAIChoice]
+    let usage: OpenAIUsage?
 }
 
 struct OpenAIChoice: Decodable {
+    let index: Int?
     let message: OpenAIMessageContent
+    let finishReason: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case index
+        case message
+        case finishReason = "finish_reason"
+    }
 }
 
 struct OpenAIMessageContent: Decodable {
-    let content: String
+    let role: String?
+    let content: String?
+}
+
+struct OpenAIUsage: Decodable {
+    let promptTokens: Int?
+    let completionTokens: Int?
+    let totalTokens: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case promptTokens = "prompt_tokens"
+        case completionTokens = "completion_tokens"
+        case totalTokens = "total_tokens"
+    }
 }
 
 // MARK: - Mapped Response

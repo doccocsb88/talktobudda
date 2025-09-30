@@ -30,6 +30,7 @@ final class NetworkService {
         // 2. Tạo messages với proper roles
         var messages: [OpenAIMessage] = []
         
+        
         // Thêm system message
         messages.append(OpenAIMessage(role: .system, content: systemPrompt))
         
@@ -58,6 +59,8 @@ final class NetworkService {
         do {
             request.httpBody = try JSONEncoder().encode(requestBody)
         } catch {
+            debugPrint("Network error: NetworkError.encodingFailed")
+
             completion(.failure(NetworkError.encodingFailed))
             return
         }
@@ -65,40 +68,55 @@ final class NetworkService {
         // 4. Thực hiện gọi API
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
+                debugPrint("Network error: \(error)")
                 completion(.failure(error))
                 return
             }
             
             guard let data = data else {
+                debugPrint("No data received")
                 completion(.failure(NetworkError.noData))
                 return
             }
             
+            // Log response for debugging
+            if let responseString = String(data: data, encoding: .utf8) {
+                debugPrint("API Response: \(responseString)")
+            }
+            
             do {
                 let openAIResponse = try JSONDecoder().decode(OpenAIResponse.self, from: data)
-                if let answer = openAIResponse.choices.first?.message.content {
-                    
-                    var validatedAnswer = answer.replacingOccurrences(of: "```", with: "")
-                    validatedAnswer = validatedAnswer.replacingOccurrences(of: "json", with: "")
-
-                    // ✅ Mapping vào BuddhistResponse
-                    
-                    if let data = validatedAnswer.data(using: .utf8), let buddhistResponse = try? JSONDecoder().decode(BuddhistResponse.self, from: data) {
-                        debugPrint("hai log answer:  \(buddhistResponse.answer)")
-                        completion(.success(buddhistResponse))
-                        
-                    } else {
-                        let buddhistResponse = BuddhistResponse(
-                            question: question,
-                            answer: answer.trimmingCharacters(in: .whitespacesAndNewlines)
-                        )
-                        completion(.success(buddhistResponse))
-                        
-                    }
-                } else {
+                
+                guard let firstChoice = openAIResponse.choices.first,
+                      let answer = firstChoice.message.content,
+                      !answer.isEmpty else {
+                    debugPrint("API Response: NetworkError.noResponse")
                     completion(.failure(NetworkError.noResponse))
+
+                    return
+                }
+                
+                // Clean up the answer text
+                var validatedAnswer = answer.replacingOccurrences(of: "```", with: "")
+                validatedAnswer = validatedAnswer.replacingOccurrences(of: "json", with: "")
+                validatedAnswer = validatedAnswer.trimmingCharacters(in: .whitespacesAndNewlines)
+
+                // Try to parse as JSON first
+                if let data = validatedAnswer.data(using: .utf8),
+                   let buddhistResponse = try? JSONDecoder().decode(BuddhistResponse.self, from: data) {
+                    debugPrint("hai log answer: \(buddhistResponse.answer)")
+                    completion(.success(buddhistResponse))
+                } else {
+                    // Fallback: create BuddhistResponse with the raw answer
+                    let buddhistResponse = BuddhistResponse(
+                        question: question,
+                        answer: validatedAnswer
+                    )
+                    debugPrint("hai log fallback answer: \(buddhistResponse.answer)")
+                    completion(.success(buddhistResponse))
                 }
             } catch {
+                debugPrint("Decoding error: \(error)")
                 completion(.failure(NetworkError.decodingFailed))
             }
         }

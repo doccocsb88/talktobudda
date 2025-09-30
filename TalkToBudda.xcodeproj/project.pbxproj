@@ -71,7 +71,6 @@
 			};
 			membershipExceptions = (
 				Info.plist,
-				Untitled.swift,
 			);
 			target = 043FD0732DC26CC6002C03A6 /* TalkToBudda */;
 		};
