@@ -14,7 +14,7 @@ final class NetworkService {
     
     init() {
         // Load API key from Info.plist
-        guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+        guard let path = Bundle.main.path(forResource: "OpenAI", ofType: "plist"),
               let plist = NSDictionary(contentsOfFile: path),
               let apiKey = plist["OpenAI_API_Key"] as? String else {
             fatalError("OpenAI API Key not found in Info.plist")
