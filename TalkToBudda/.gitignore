@@ -58,3 +58,5 @@ iOSInjectionProject/
 
 # API Keys and Secrets
 Info.plist
+TalkToBudda/OpenAI.plist
+OpenAI.plist
