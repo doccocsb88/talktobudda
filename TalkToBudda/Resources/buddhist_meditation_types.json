@@ -1,0 +1,145 @@
+[
+    {
+        "id": 1,
+        "name": "Samatha Meditation (Calm Abiding Meditation)",
+        "purpose": "To develop concentration (samādhi) and mental tranquility.",
+        "method": "Focus on a single object such as the breath, a candle flame, or a mantra.",
+        "benefits": "Increases mental stability, reduces anxiety, and prepares the mind for deeper insight.",
+        "how_to_practice": [
+            "Find a quiet and comfortable place to sit, either on a chair or a cushion.",
+            "Keep your back straight but relaxed, and close your eyes gently.",
+            "Focus your attention on your breath—observe each inhale and exhale.",
+            "If your mind wanders, gently bring it back to the breath without judgment.",
+            "Practice this for 10 to 20 minutes daily, gradually increasing the duration over time."
+        ]
+    },
+    {
+        "id": 2,
+
+        "name": "Vipassana Meditation (Insight Meditation)",
+        "purpose": "To develop insight into the true nature of reality: impermanence (anicca), suffering (dukkha), and non-self (anattā).",
+        "method": "Observe bodily sensations, thoughts, and feelings with mindfulness and equanimity.",
+        "benefits": "Enhances clarity of mind, deepens understanding of the nature of existence, and leads to liberation.",
+        "how_to_practice": [
+            "Sit comfortably in a quiet place with your back straight and eyes closed.",
+            "Begin by focusing on your breath to establish mindfulness.",
+            "Shift your attention to bodily sensations—notice any tension, heat, or movement.",
+            "Extend awareness to thoughts and emotions, observing them without attachment.",
+            "Simply watch them arise and fade away, understanding their impermanent nature.",
+            "Continue practicing daily, starting with 20 minutes and increasing as comfortable."
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Metta Bhavana (Loving-Kindness Meditation)",
+        "purpose": "To cultivate loving-kindness (metta) towards oneself and others.",
+        "method": "Generate feelings of goodwill and compassion, beginning with oneself and expanding to others.",
+        "benefits": "Reduces anger, increases empathy, and promotes emotional healing.",
+        "how_to_practice": [
+            "Sit comfortably with your eyes closed and take a few deep breaths.",
+            "Begin by generating feelings of kindness towards yourself: \"May I be happy, may I be healthy, may I be at peace.\"",
+            "Gradually extend these feelings to loved ones, friends, neutral people, and even those you find challenging.",
+            "Finally, extend loving-kindness to all beings everywhere.",
+            "Repeat for 15–30 minutes, focusing deeply on each sentiment."
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Anapanasati Meditation (Mindfulness of Breathing)",
+        "purpose": "To develop mindfulness and deep awareness of the present moment.",
+        "method": "Focus on the natural rhythm of breathing, observing each breath as it enters and leaves the body.",
+        "benefits": "Calms the mind, enhances concentration, and deepens insight into the nature of existence.",
+        "how_to_practice": [
+            "Sit comfortably with your back straight and close your eyes.",
+            "Bring your attention to your breath—feel the sensation of the air entering and leaving your nostrils.",
+            "If your mind wanders, gently guide it back to the breath without judgment.",
+            "Practice daily for 20–30 minutes, allowing your awareness to grow stronger over time."
+        ]
+    },
+    {
+        "id": 5,
+        "name": "Walking Meditation (Kinh Hành)",
+        "purpose": "To cultivate mindfulness during movement and connect deeply with the present moment.",
+        "method": "Walk slowly and deliberately, focusing on each step and the sensation of your feet touching the ground.",
+        "benefits": "Increases body awareness, enhances mindfulness, and promotes calmness during daily activities.",
+        "how_to_practice": [
+            "Choose a path where you can walk back and forth undisturbed.",
+            "Stand still for a moment, feeling the weight of your body on the ground.",
+            "Begin walking slowly, paying attention to each step—lifting, moving, and placing your foot.",
+            "Keep your eyes slightly open, maintaining a soft gaze ahead.",
+            "If your mind wanders, gently return your focus to your footsteps.",
+            "Practice for 10–15 minutes, extending the duration as you become more comfortable."
+        ]
+    },
+    {
+        "id": 6,
+        "name": "Satipatthana Meditation (Four Foundations of Mindfulness)",
+        "purpose": "To develop complete mindfulness and insight into the nature of body, feelings, mind, and phenomena.",
+        "method": "Observe four foundations: body (kaya), feelings (vedana), mind (citta), and mental objects (dhamma).",
+        "benefits": "Deepens understanding of the mind, increases awareness, and promotes liberation.",
+        "how_to_practice": [
+            "Sit in a comfortable position and close your eyes.",
+            "Begin with mindfulness of the body—notice sensations, movement, and posture.",
+            "Move to mindfulness of feelings—observe sensations as pleasant, unpleasant, or neutral.",
+            "Extend to mindfulness of mind—be aware of thoughts and mental states.",
+            "Finally, observe mental objects—notice impermanence, suffering, and non-self.",
+            "Practice for 20–30 minutes daily, increasing gradually over time."
+        ]
+    },
+    {
+        "id": 7,
+        "name": "Vajrayana Meditation (Tantric Meditation)",
+        "purpose": "To transform ordinary experiences into paths of enlightenment through visualization, mantras, and rituals.",
+        "method": "Focus on deity visualization, recitation of mantras, and energy channeling.",
+        "benefits": "Accelerates spiritual development, purifies karma, and enhances concentration.",
+        "how_to_practice": [
+            "Sit in a comfortable meditation posture.",
+            "Visualize a chosen deity (yidam) with clarity and focus.",
+            "Recite the associated mantra while maintaining the visualization.",
+            "Focus on purifying negative emotions and cultivating positive ones.",
+            "Conclude the session by dissolving the visualization back into emptiness."
+        ]
+    },
+    {
+        "id": 8,
+        "name": "Koan Meditation (Zen Riddle Meditation)",
+        "purpose": "To break conventional thinking and trigger sudden enlightenment.",
+        "method": "Focus on paradoxical questions (koans) that defy logical reasoning.",
+        "benefits": "Expands consciousness, deepens insight, and liberates the mind from fixed ideas.",
+        "how_to_practice": [
+            "Sit quietly in a meditative posture.",
+            "Contemplate a single koan, such as \"What is the sound of one hand clapping?\"",
+            "Avoid intellectual analysis—immerse fully into the question.",
+            "Allow the koan to penetrate your mind until logical thinking collapses.",
+            "Remain in stillness, observing any shifts in awareness."
+        ]
+    },
+    {
+        "id": 9,
+        "name": "Sunyata Meditation (Meditation on Emptiness)",
+        "purpose": "To realize the emptiness of all phenomena and transcend attachment.",
+        "method": "Contemplate the nature of emptiness (Sunyata) as the absence of inherent existence.",
+        "benefits": "Dissolves attachment, reveals the nature of reality, and brings about profound liberation.",
+        "how_to_practice": [
+            "Sit comfortably in a meditative posture.",
+            "Focus on the concept of emptiness, understanding that all things lack independent existence.",
+            "Observe how thoughts and sensations arise and pass away without a permanent self.",
+            "Remain aware of the interconnectedness and fluidity of all things.",
+            "Practice regularly to deepen your understanding of non-self."
+        ]
+    },
+    {
+        "id": 10,
+        "name": "Pure Land Meditation (Amitabha Buddha Contemplation)",
+        "purpose": "To cultivate faith and connection with Amitabha Buddha, leading to rebirth in the Pure Land.",
+        "method": "Chant Amitabha Buddha's name and visualize the Pure Land.",
+        "benefits": "Generates merit, reduces attachment, and strengthens faith.",
+        "how_to_practice": [
+            "Sit comfortably with eyes closed.",
+            "Recite \"Namo Amituofo\" (Homage to Amitabha Buddha) with full devotion.",
+            "Visualize Amitabha Buddha and the Pure Land as clearly as possible.",
+            "Maintain this focus for 15–30 minutes daily."
+        ]
+    }
+]
+ 

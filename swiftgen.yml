@@ -1,0 +1,29 @@
+strings:
+ inputs: TalkToBudda/Resources/Assets/Strings
+ outputs:
+   - templateName: structured-swift5
+     output: TalkToBudda/Swiftgen/Accessor.strings.swift
+     publicAccess: true
+xcassets:
+ inputs:
+   - TalkToBudda/Resources/Assets/Assets.xcassets
+   - TalkToBudda/Resources/Assets/Colors/Colors.xcassets
+ outputs:
+   - templateName: swift5
+     output: TalkToBudda/Swiftgen/Accessor.assets.swift
+     params:
+       publicAccess: true
+fonts:
+  inputs: TalkToBudda/Resources/Assets/Fonts
+  outputs:
+    - templateName: swift5
+      output: TalkToBudda/Swiftgen/Accessor.fonts.swift
+      params:
+        publicAccess: true
+#colors:
+# inputs: ResumeBuilder/Assets/Colors/Colors.xcassets
+# outputs:
+#   templateName: swift5
+#   output: ResumeBuilder/Swiftgen/Accessor.colors.swift
+#   params:
+#     publicAccess: true

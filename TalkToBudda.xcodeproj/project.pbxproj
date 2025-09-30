@@ -6,15 +6,72 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		040EE58E2DCC5DE400F19C4C /* SVProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 040EE58D2DCC5DE400F19C4C /* SVProgressHUD */; };
+		042722982DC8B0DB000815A7 /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 042722972DC8B0DB000815A7 /* RxBlocking */; };
+		0427229A2DC8B0DB000815A7 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 042722992DC8B0DB000815A7 /* RxCocoa */; };
+		0427229C2DC8B0DB000815A7 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 0427229B2DC8B0DB000815A7 /* RxRelay */; };
+		043C55A42E82EC9C00EAA66D /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04AA497E2DCF64BE0057841B /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		043FD3C82DC26D71002C03A6 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 043FD3C72DC26D71002C03A6 /* SnapKit */; };
+		04AA497F2DCF64BE0057841B /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04AA497E2DCF64BE0057841B /* RealmSwift */; };
+		04AA619C2DD393D70057841B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04AA619B2DD393D70057841B /* StoreKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		043C55A52E82EC9C00EAA66D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				043C55A42E82EC9C00EAA66D /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		043FD0742DC26CC6002C03A6 /* TalkToBudda.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TalkToBudda.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04AA619B2DD393D70057841B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		043FD0862DC26CC7002C03A6 /* Exceptions for "TalkToBudda" folder in "TalkToBudda" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			assetTagsByRelativePath = {
+				"Resources/Pdfs/ABHIDHAMMA PITAKA/en231-1.pdf" = ("ABHIDHAMMA PITAKA", );
+				"Resources/Pdfs/ABHIDHAMMA PITAKA/en231-2.pdf" = ("ABHIDHAMMA PITAKA", );
+				"Resources/Pdfs/ABHIDHAMMA PITAKA/en231-3.pdf" = ("ABHIDHAMMA PITAKA", );
+				"Resources/Pdfs/ABHIDHAMMA PITAKA/en231-4.pdf" = ("ABHIDHAMMA PITAKA", );
+				"Resources/Pdfs/ABHIDHAMMA PITAKA/en231-5.pdf" = ("ABHIDHAMMA PITAKA", );
+				"Resources/Pdfs/ABHIDHAMMA PITAKA/en231-6.pdf" = ("ABHIDHAMMA PITAKA", );
+				"Resources/Pdfs/Linked Discourses (Tương ưng bộ)/en165-1.pdf" = ("Linked Discourses", );
+				"Resources/Pdfs/Linked Discourses (Tương ưng bộ)/en165-2.pdf" = ("Linked Discourses", );
+				"Resources/Pdfs/Linked Discourses (Tương ưng bộ)/en165-3.pdf" = ("Linked Discourses", );
+				"Resources/Pdfs/Linked Discourses (Tương ưng bộ)/en165-4.pdf" = ("Linked Discourses", );
+				"Resources/Pdfs/Linked Discourses (Tương ưng bộ)/en165-5.pdf" = ("Linked Discourses", );
+				"Resources/Pdfs/Long Discourses (Trường bộ)/en163-1.pdf" = ("Long Discourses", );
+				"Resources/Pdfs/Long Discourses (Trường bộ)/en163-2.pdf" = ("Long Discourses", );
+				"Resources/Pdfs/Long Discourses (Trường bộ)/en163-3.pdf" = ("Long Discourses", );
+				"Resources/Pdfs/Middle Discourses (Trung bộ)/en164-1.pdf" = ("Middle Discourses", );
+				"Resources/Pdfs/Middle Discourses (Trung bộ)/en164-2.pdf" = ("Middle Discourses", );
+				"Resources/Pdfs/Middle Discourses (Trung bộ)/en164-3.pdf" = ("Middle Discourses", );
+				"Resources/Pdfs/Minor Collection/en248.pdf" = ("Minor Collection", );
+				"Resources/Pdfs/Minor Collection/en249.pdf" = ("Minor Collection", );
+				"Resources/Pdfs/Minor Collection/en250.pdf" = ("Minor Collection", );
+				"Resources/Pdfs/Minor Collection/en251.pdf" = ("Minor Collection", );
+				"Resources/Pdfs/Minor Collection/en252.pdf" = ("Minor Collection", );
+				"Resources/Pdfs/Numbered Discourses/en166-1.pdf" = ("Numbered Discourses", );
+				"Resources/Pdfs/Numbered Discourses/en166-2.pdf" = ("Numbered Discourses", );
+				"Resources/Pdfs/Numbered Discourses/en166-3.pdf" = ("Numbered Discourses", );
+				"Resources/Pdfs/Numbered Discourses/en166-4.pdf" = ("Numbered Discourses", );
+				"Resources/Pdfs/Numbered Discourses/en166-5.pdf" = ("Numbered Discourses", );
+				"Resources/Pdfs/VINAYA PITAKA (TẠNG LUẬT)/en54.pdf" = ("VINAYA PITAKA", );
+			};
 			membershipExceptions = (
 				Info.plist,
+				Untitled.swift,
 			);
 			target = 043FD0732DC26CC6002C03A6 /* TalkToBudda */;
 		};
@@ -36,6 +93,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0427229A2DC8B0DB000815A7 /* RxCocoa in Frameworks */,
+				04AA619C2DD393D70057841B /* StoreKit.framework in Frameworks */,
+				04AA497F2DCF64BE0057841B /* RealmSwift in Frameworks */,
+				040EE58E2DCC5DE400F19C4C /* SVProgressHUD in Frameworks */,
+				043FD3C82DC26D71002C03A6 /* SnapKit in Frameworks */,
+				0427229C2DC8B0DB000815A7 /* RxRelay in Frameworks */,
+				042722982DC8B0DB000815A7 /* RxBlocking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +110,7 @@
 			isa = PBXGroup;
 			children = (
 				043FD0762DC26CC6002C03A6 /* TalkToBudda */,
+				04AA619A2DD393D70057841B /* Frameworks */,
 				043FD0752DC26CC6002C03A6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -58,6 +123,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		04AA619A2DD393D70057841B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				04AA619B2DD393D70057841B /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -68,6 +141,7 @@
 				043FD0702DC26CC6002C03A6 /* Sources */,
 				043FD0712DC26CC6002C03A6 /* Frameworks */,
 				043FD0722DC26CC6002C03A6 /* Resources */,
+				043C55A52E82EC9C00EAA66D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -78,6 +152,12 @@
 			);
 			name = TalkToBudda;
 			packageProductDependencies = (
+				043FD3C72DC26D71002C03A6 /* SnapKit */,
+				042722972DC8B0DB000815A7 /* RxBlocking */,
+				042722992DC8B0DB000815A7 /* RxCocoa */,
+				0427229B2DC8B0DB000815A7 /* RxRelay */,
+				040EE58D2DCC5DE400F19C4C /* SVProgressHUD */,
+				04AA497E2DCF64BE0057841B /* RealmSwift */,
 			);
 			productName = TalkToBudda;
 			productReference = 043FD0742DC26CC6002C03A6 /* TalkToBudda.app */;
@@ -90,6 +170,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					"ABHIDHAMMA PITAKA",
+					"Linked Discourses",
+					"Long Discourses",
+					"Middle Discourses",
+					"Minor Collection",
+					"Numbered Discourses",
+					"VINAYA PITAKA",
+				);
 				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
@@ -107,6 +196,12 @@
 			);
 			mainGroup = 043FD06B2DC26CC6002C03A6;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				043FD3C62DC26D71002C03A6 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				042722962DC8B0DB000815A7 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				040EE58C2DCC5DE400F19C4C /* XCRemoteSwiftPackageReference "SVProgressHUD" */,
+				04AA497B2DCF64BE0057841B /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 043FD0752DC26CC6002C03A6 /* Products */;
 			projectDirPath = "";
@@ -145,13 +240,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F59XSVKP6X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TalkToBudda/Info.plist;
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -159,9 +257,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = hai.codetu.TalkToBudda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -172,13 +274,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F59XSVKP6X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TalkToBudda/Info.plist;
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -186,9 +291,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = hai.codetu.TalkToBudda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -333,6 +442,74 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		040EE58C2DCC5DE400F19C4C /* XCRemoteSwiftPackageReference "SVProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SVProgressHUD/SVProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.1;
+			};
+		};
+		042722962DC8B0DB000815A7 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.0;
+			};
+		};
+		043FD3C62DC26D71002C03A6 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		04AA497B2DCF64BE0057841B /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		040EE58D2DCC5DE400F19C4C /* SVProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 040EE58C2DCC5DE400F19C4C /* XCRemoteSwiftPackageReference "SVProgressHUD" */;
+			productName = SVProgressHUD;
+		};
+		042722972DC8B0DB000815A7 /* RxBlocking */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 042722962DC8B0DB000815A7 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxBlocking;
+		};
+		042722992DC8B0DB000815A7 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 042722962DC8B0DB000815A7 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		0427229B2DC8B0DB000815A7 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 042722962DC8B0DB000815A7 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		043FD3C72DC26D71002C03A6 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 043FD3C62DC26D71002C03A6 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		04AA497E2DCF64BE0057841B /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04AA497B2DCF64BE0057841B /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 043FD06C2DC26CC6002C03A6 /* Project object */;
 }
