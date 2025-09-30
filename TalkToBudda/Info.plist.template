@@ -5,6 +5,6 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>OpenAI_API_Key</key>
-	<string>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</string>
+	<string>YOUR_OPENAI_API_KEY_HERE</string>
 </dict>
 </plist>

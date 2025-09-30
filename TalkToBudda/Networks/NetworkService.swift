@@ -9,8 +9,18 @@ import Foundation
 
 final class NetworkService {
     
-    private let apiKey = "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"
+    private let apiKey: String
     private let baseURL = "https://api.openai.com/v1/chat/completions"
+    
+    init() {
+        // Load API key from Info.plist
+        guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+              let plist = NSDictionary(contentsOfFile: path),
+              let apiKey = plist["OpenAI_API_Key"] as? String else {
+            fatalError("OpenAI API Key not found in Info.plist")
+        }
+        self.apiKey = apiKey
+    }
     
     func sendQuestion(_ question: String, conversation: ConversationCodable, characterType: CharacterType, completion: @escaping (Result<BuddhistResponse, Error>) -> Void) {
         // 1. Tạo system prompt và user message
