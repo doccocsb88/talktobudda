@@ -7,7 +7,7 @@
 
 
 enum StoreItem: Int, Codable, CaseIterable {
-    case karma = 0, weekly1, weeklytrial1, monthly1, monthly2
+    case karma = 0, weekly1, weeklytrial1, monthly2
     
     var productId: String {
         switch self {
@@ -17,8 +17,6 @@ enum StoreItem: Int, Codable, CaseIterable {
             return "hai.codetu.TalkToBudda.weekly1"
         case .weeklytrial1:
             return "hai.codetu.TalkToBudda.weeklytrial1"
-        case .monthly1:
-            return "hai.codetu.TalkToBudda.monthly1"
         case .monthly2:
             return "hai.codetu.TalkToBudda.monthly2"
         }
@@ -43,8 +41,6 @@ enum StoreItem: Int, Codable, CaseIterable {
             return "Weekly"
         case .weeklytrial1:
             return "Weekly Trial"
-        case .monthly1:
-            return "Monthly"
         case .monthly2:
             return "Monthly"
         }

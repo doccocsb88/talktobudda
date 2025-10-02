@@ -35,7 +35,7 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
     }()
     
     private let donateButton = UIButton()
-//    private let donateLabel = UILabel()
+    private let donateLabel = UILabel()
     private let backButton = UIButton()
     
     override func viewDidLoad() {
@@ -86,11 +86,19 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
         
         Task {
             try? await StoreKitManager.shared.loadProducts()
+            if let karmarProduct = StoreKitManager.shared.hasItem(item: .karma) {
+                donateButton.isHidden = false
+                donateButton.setTitle("Plant a seed of wisdom for just \(karmarProduct.displayPrice)", for: .normal)
+            } else {
+                donateButton.isHidden = true
+            }
+            
+            donateLabel.isHidden = StoreKitManager.shared.isPremium
         }
     }
     
     private func setupUI() {
-        [navView, backgroundImageView, quoteLabel, audioView, donateButton].forEach({view.addSubview($0)})
+        [navView, backgroundImageView, quoteLabel, audioView, donateButton, donateLabel].forEach({view.addSubview($0)})
         [titleLabel, backButton].forEach({navView.addSubview($0)})
         backgroundImageView.alpha = 0.3
         backgroundImageView.contentMode = .scaleAspectFill
@@ -107,12 +115,16 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
         backButton.tintColor = .color4B3621
                 
         donateButton.setImage(Asset.Assets.icDonate2.image, for: .normal)
-        donateButton.setTitle("Offer dāna with joy", for: .normal)
+        donateButton.setTitle("Plant a seed of wisdom for just $0.99", for: .normal)
         donateButton.setTitleColor(.color4B3621, for: .normal)
         donateButton.imageView?.contentMode = .scaleAspectFit
-        donateButton.titleLabel?.font = FontFamily.PlayfairDisplay.regular.font(size: 12)
+        donateButton.titleLabel?.font = FontFamily.PlayfairDisplay.medium.font(size: 12)
         donateButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: -5)
         donateButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 5)
+
+        donateLabel.text = "Get 10 bonus chats to deepen your practice."
+        donateLabel.textColor = .gray100
+        donateLabel.font = FontFamily.PlayfairDisplay.regular.font(size: 12)
 
         navView.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
@@ -190,10 +202,15 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
         
         donateButton.snp.makeConstraints { make in
             make.height.equalTo(35)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(8)
+            make.bottom.equalTo(donateLabel.snp.top).inset(-8)
             make.centerX.equalToSuperview()
         }
       
+        donateLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(8)
+            make.centerX.equalToSuperview()
+        }
+        
         pauseButton.addTarget(self, action: #selector(pauseTapped), for: .touchUpInside)
         stopButton.addTarget(self, action: #selector(stopTapped), for: .touchUpInside)
         donateButton.addTarget(self, action: #selector(tappedDonateButton), for: .touchUpInside)

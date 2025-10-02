@@ -133,6 +133,11 @@ extension UIColor {
     static let primary950 = UIColor(hexString: "#0E315D")
     static let primary200 = UIColor(hexString: "#B5EAFF")
     static let primary100 = UIColor(hexString: "#D6F2FF")
+    
+    //MARK: App Specific Colors
+    
+//    static let color4B3621 = UIColor(hexString: "#4B3621")
+//    static let colorFDF6ED = UIColor(hexString: "#FDF6ED")
 
     func toHexString() -> String {
         var r: CGFloat = 0

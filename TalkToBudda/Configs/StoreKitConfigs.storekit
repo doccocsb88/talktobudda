@@ -168,7 +168,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "hai.codetu.TalkToBudda.monthly1",
+          "productID" : "hai.codetu.TalkToBudda.monthly2",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Monthly",
           "subscriptionGroupID" : "486EA5EE",

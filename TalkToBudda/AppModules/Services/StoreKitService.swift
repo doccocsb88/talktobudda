@@ -33,7 +33,8 @@ class StoreKitManager {
         $purchasedItems
             .sink {[weak self] items in
                 print("StoreKitManager: [TransactionManager] Purchased updated: \(items)")
-                self?.isPremium = !items.isEmpty
+                let noneConsumeItems = items.filter({$0.itemType != .consumable})
+                self?.isPremium = !noneConsumeItems.isEmpty
             }
             .store(in: &cancellables)
     }
@@ -87,7 +88,7 @@ class StoreKitManager {
                 case .verified(let transaction):
                     debugPrint("StoreKitManager: Giao dịch thành công: \(transaction.id)")
                     await transaction.finish()
-                    //                    addCoins(amount: 100) // Ví dụ: nạp thêm 100 coin
+                    ConditionServices.shared.addChatCount()
                     await handle(transaction: transaction)
                 case .unverified(_, let error):
                     debugPrint("StoreKitManager: Giao dịch không xác thực: \(error)")
@@ -185,4 +186,12 @@ class StoreKitManager {
         }
     }
 
+    func hasItem(item: StoreItem) -> Product? {
+        guard let product = availableProducts.first(where: { $0.id == item.productId }) else {
+            
+            return nil
+        }
+        
+        return product
+    }
 }

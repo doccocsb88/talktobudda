@@ -23,14 +23,6 @@ class ChatViewController: UIViewController, ChatViewable {
         return view
     }()
     
-    private lazy var settingButton: UIButton = {
-        let button = UIButton()
-        button.setImage(Asset.Assets.icHomeSetting.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.tintColor = .color7D5A4F
-        button.addTarget(self, action: #selector(tappedSettingButton(_:)), for: .touchUpInside)
-        return button
-    }()
-    
     private lazy var characterButton: UIButton = {
         let button = UIButton()
         button.isHidden = true
@@ -61,12 +53,48 @@ class ChatViewController: UIViewController, ChatViewable {
         }
     }
     
+    private lazy var premiumPromptView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(hexString: "#FFF8E7")
+        view.layer.cornerRadius = 12
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor(hexString: "#E6D7B8").cgColor
+        view.isHidden = true
+        return view
+    }()
+    
+    private lazy var chatCountLabel: UILabel = {
+        let label = UILabel()
+        label.font = FontFamily.FiraMono.medium.font(size: 14)
+        label.textColor = UIColor(hexString: "#8B6F47")
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private lazy var storeButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Get More", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = FontFamily.FiraMono.bold.font(size: 14)
+        button.backgroundColor = UIColor(hexString: "#D4A574")
+        button.layer.cornerRadius = 8
+        button.addTarget(self, action: #selector(tappedStoreButton(_:)), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: false)
         setupUI()
         setupKeyboardObservers()
+        updatePremiumPromptVisibility()
         presenter?.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updatePremiumPromptVisibility()
+        updateChatCountLabel()
     }
     
     deinit {
@@ -77,11 +105,14 @@ class ChatViewController: UIViewController, ChatViewable {
         view.backgroundColor = .colorFDF6ED
         view.addSubview(navView)
         view.addSubview(tableView)
+        view.addSubview(premiumPromptView)
         view.addSubview(inputBar)
 
-        navView.addSubview(settingButton)
         navView.addSubview(characterButton)
         navView.addSubview(titleLabel)
+        
+        premiumPromptView.addSubview(chatCountLabel)
+        premiumPromptView.addSubview(storeButton)
         
         tableView.register(ChatMessageCell.self, forCellReuseIdentifier: "ChatMessageCell")
         tableView.register(BuddaChatMessageCell.self, forCellReuseIdentifier: "BuddaChatMessageCell")
@@ -110,7 +141,26 @@ class ChatViewController: UIViewController, ChatViewable {
         tableView.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
             make.top.equalTo(navView.snp.bottom)
-            make.bottom.equalTo(inputBar.snp.top).offset(-20)
+            make.bottom.equalTo(premiumPromptView.snp.top).offset(-8)
+        }
+        
+        premiumPromptView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(12)
+            make.bottom.equalTo(inputBar.snp.top).offset(-8)
+            make.height.equalTo(44)
+        }
+        
+        chatCountLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(12)
+            make.centerY.equalToSuperview()
+            make.right.equalTo(storeButton.snp.left).offset(-8)
+        }
+        
+        storeButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(12)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(80)
+            make.height.equalTo(32)
         }
 
         inputBar.snp.makeConstraints { make in
@@ -119,15 +169,9 @@ class ChatViewController: UIViewController, ChatViewable {
             make.height.equalTo(50)
         }
         
-        settingButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.width.height.equalTo(44)
-            make.right.equalToSuperview().inset(8)
-        }
-        
         characterButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.right.equalTo(settingButton.snp.left).offset(-8)
+            make.right.equalToSuperview().inset(8)
             make.height.equalTo(30)
             make.width.equalTo(100)
         }
@@ -148,6 +192,7 @@ class ChatViewController: UIViewController, ChatViewable {
         self.messages = messages
         tableView.reloadData()
         scrollToBottom()
+        updateChatCountLabel()
     }
 
     func appendMessage(_ message: ChatMessage) {
@@ -156,6 +201,7 @@ class ChatViewController: UIViewController, ChatViewable {
         tableView.reloadData()
 
         scrollToBottom()
+        updateChatCountLabel()
     }
 
     func showNav() {
@@ -203,12 +249,6 @@ class ChatViewController: UIViewController, ChatViewable {
         dismiss(animated: true)
     }
     
-    @objc func tappedSettingButton(_ sender: UIButton) {
-        let settingVC = SettingsViewController()
-        settingVC.modalPresentationStyle = .fullScreen
-        present(settingVC, animated: true)
-    }
-    
     @objc func tappedCharacterButton(_ sender: UIButton) {
         let characterSelectionVC = CharacterSelectionViewController()
         characterSelectionVC.delegate = self
@@ -218,6 +258,30 @@ class ChatViewController: UIViewController, ChatViewable {
     
     @objc private func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    @objc private func tappedStoreButton(_ sender: UIButton) {
+        DSRouter.showDS(from: self) { [weak self] in
+            // Update UI after store interaction
+            self?.updatePremiumPromptVisibility()
+        }
+    }
+    
+    private func updatePremiumPromptVisibility() {
+        let isPremium = StoreKitManager.shared.isPremium
+        premiumPromptView.isHidden = isPremium
+        
+        if !isPremium {
+            updateChatCountLabel()
+        }
+    }
+    
+    private func updateChatCountLabel() {
+        let currentChatCount = ConditionServices.shared.chatCount
+        let totalChat = ConditionServices.shared.totalChatFree
+        let remainingCount = max(0, totalChat - currentChatCount)
+        
+        chatCountLabel.text = "\(remainingCount) chats remaining"
     }
     
     // MARK: - Keyboard Handling
@@ -255,6 +319,9 @@ class ChatViewController: UIViewController, ChatViewable {
             self.inputBar.snp.updateConstraints { make in
                 make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-keyboardHeight + safeAreaBottom - 8)
             }
+            self.premiumPromptView.snp.updateConstraints { make in
+                make.bottom.equalTo(self.inputBar.snp.top).offset(-8)
+            }
             self.view.layoutIfNeeded()
         }
         
@@ -272,6 +339,9 @@ class ChatViewController: UIViewController, ChatViewable {
         UIView.animate(withDuration: animationDuration) {
             self.inputBar.snp.updateConstraints { make in
                 make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-8)
+            }
+            self.premiumPromptView.snp.updateConstraints { make in
+                make.bottom.equalTo(self.inputBar.snp.top).offset(-8)
             }
             self.view.layoutIfNeeded()
         }

@@ -70,6 +70,11 @@ class SettingsViewController: UIViewController, MFMailComposeViewControllerDeleg
         setupTableView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     private func setupView() {
         title = "Settings"
         view.backgroundColor = .colorFDF6ED
