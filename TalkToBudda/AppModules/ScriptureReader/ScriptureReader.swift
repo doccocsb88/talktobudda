@@ -67,11 +67,28 @@ class ScriptureReaderVC: UIViewController {
                         self.loadPDF()
                     }
                 } else {
-                    print("❌ Không tìm thấy file \(self.scripture.name) trong \(self.scripture.resourceTag)")
+                    self.showResourceLoadError()
                 }
             } else {
-                print("Không thể tải tài nguyên Long Discourses.")
+                self.showResourceLoadError()
             }
+        }
+    }
+    
+    private func showResourceLoadError() {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(
+                title: "Resource Loading Error",
+                message: "Unable to load this document. Please check your network connection and try again.",
+                preferredStyle: .alert
+            )
+            
+            let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+                self?.dismiss(animated: true)
+            }
+            
+            alert.addAction(okAction)
+            self.present(alert, animated: true)
         }
     }
     
@@ -121,6 +138,7 @@ class ScriptureReaderVC: UIViewController {
     private func loadPDF() {
         guard let url = pdfUrl else {
             print("❌ URL không hợp lệ.")
+            showResourceLoadError()
             return
         }
         if let document = PDFDocument(url: url) {
@@ -140,7 +158,7 @@ class ScriptureReaderVC: UIViewController {
             }
             print("✅ Tải PDF thành công: \(url.lastPathComponent)")
         } else {
-            print("❌ Không thể load PDF.")
+            showResourceLoadError()
         }
     }
     

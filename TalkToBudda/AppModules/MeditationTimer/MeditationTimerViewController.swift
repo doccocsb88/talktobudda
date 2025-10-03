@@ -94,6 +94,7 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
             }
             
             donateLabel.isHidden = StoreKitManager.shared.isPremium
+            donateButton.isHidden = StoreKitManager.shared.isPremium
         }
     }
     

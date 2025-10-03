@@ -29,18 +29,21 @@ class PurchaseViewController: UIViewController {
     private let benifitStackView = UIStackView()
     private let headerView = UIView()
     
+    private let bonusChatsButton = UIButton()
+    private let bonusChatsView = UIView()
+    
     private let continueButton = UIButton()
     private let continueView = UIView()
 
     private lazy var policyActionView: StoreOnePolicyActionView = {
         let view = StoreOnePolicyActionView()
         view.onPrivacyTapped = { [weak self] in
-            guard let url = Bundle.main.url(forResource: "Privacy Policy.html", withExtension: nil) else { return }
+            guard let url = Bundle.main.url(forResource: "privacy-policy.html", withExtension: nil) else { return }
             self?.openWeb(url: url, title: "Privacy Policy")
         }
 
         view.onTermsTapped = { [weak self] in
-            guard let url = Bundle.main.url(forResource: "tou.html", withExtension: nil) else { return }
+            guard let url = Bundle.main.url(forResource: "terms-of-use.html", withExtension: nil) else { return }
             self?.openWeb(url: url, title: "Term of Use")
         }
 
@@ -155,6 +158,7 @@ class PurchaseViewController: UIViewController {
         }
         
         contentStack.addArrangedSubview(headerView)
+        contentStack.addArrangedSubview(bonusChatsView)
         contentStack.addArrangedSubview(itemStackView)
         contentStack.addArrangedSubview(continueView)
         contentStack.addArrangedSubview(policyActionView)
@@ -224,6 +228,25 @@ class PurchaseViewController: UIViewController {
             $0.height.equalTo(120)
         }
 
+        // Setup bonus chats button
+        bonusChatsButton.setTitle("Get 10 bonus chats to deepen your practice. just price", for: .normal)
+        bonusChatsButton.setTitleColor(.white, for: .normal)
+        bonusChatsButton.backgroundColor = UIColor(hexString: "#8B4513")
+        bonusChatsButton.titleLabel?.font = FontFamily.PlayfairDisplay.medium.font(size: 14)
+        bonusChatsButton.titleLabel?.numberOfLines = 0
+        bonusChatsButton.titleLabel?.textAlignment = .center
+        bonusChatsButton.rounded(radius: 12)
+
+        bonusChatsView.snp.makeConstraints { make in
+            make.height.equalTo(view.hasTopNorth ? 60 : 50)
+        }
+        bonusChatsView.addSubview(bonusChatsButton)
+        bonusChatsButton.snp.makeConstraints {
+            $0.height.equalTo(view.hasTopNorth ? 50 : 40)
+            $0.center.equalToSuperview()
+            $0.left.right.equalToSuperview()
+        }
+
         continueButton.setTitle("Subscribe Now", for: .normal)
         continueButton.setTitleColor(.white, for: .normal)
         continueButton.backgroundColor = UIColor(hexString: "#e26613")
@@ -243,6 +266,7 @@ class PurchaseViewController: UIViewController {
         policyActionView.snp.makeConstraints{$0.height.equalTo(35)}
         closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
         continueButton.addTarget(self, action: #selector(purchaseTapped), for: .touchUpInside)
+        bonusChatsButton.addTarget(self, action: #selector(bonusChatsTapped), for: .touchUpInside)
     }
 
     private func loadProducts() {
@@ -331,6 +355,20 @@ class PurchaseViewController: UIViewController {
         }
         itemStackView.backgroundColor = UIColor(hexString: "#feb022")
         itemStackView.rounded(radius: 20)
+        
+        // Update bonus chats button with consumable price
+        updateBonusChatsButton()
+    }
+    
+    private func updateBonusChatsButton() {
+        // Check if karma (consumable) product is available
+        if let karmaProduct = StoreKitManager.shared.hasItem(item: .karma) {
+            let price = karmaProduct.displayPrice
+            bonusChatsButton.setTitle("Get 10 bonus chats to deepen your practice.\njust \(price)", for: .normal)
+            bonusChatsButton.isHidden = false
+        } else {
+            bonusChatsButton.isHidden = true
+        }
     }
 
     private func createProductView(for product: Product, selected: Bool) -> UIView {
@@ -411,6 +449,13 @@ class PurchaseViewController: UIViewController {
     @objc private func purchaseTapped() {
         Task {
             await viewModel.purchaseSelectedItem()
+        }
+    }
+    
+    @objc private func bonusChatsTapped() {
+        // Purchase karma (consumable) product directly
+        Task {
+            await StoreKitManager.shared.purchase(item: .karma)
         }
     }
     
