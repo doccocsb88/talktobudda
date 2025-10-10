@@ -13,9 +13,22 @@
 		0427229C2DC8B0DB000815A7 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 0427229B2DC8B0DB000815A7 /* RxRelay */; };
 		043C55A42E82EC9C00EAA66D /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 04AA497E2DCF64BE0057841B /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		043FD3C82DC26D71002C03A6 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 043FD3C72DC26D71002C03A6 /* SnapKit */; };
+		04604AD22E98D99000294A7E /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04604AD12E98D99000294A7E /* WidgetKit.framework */; };
+		04604AD42E98D99000294A7E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04604AD32E98D99000294A7E /* SwiftUI.framework */; };
+		04604AE12E98D99100294A7E /* BuddaWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 04604AD02E98D98F00294A7E /* BuddaWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		04AA497F2DCF64BE0057841B /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 04AA497E2DCF64BE0057841B /* RealmSwift */; };
 		04AA619C2DD393D70057841B /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04AA619B2DD393D70057841B /* StoreKit.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		04604ADF2E98D99100294A7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 043FD06C2DC26CC6002C03A6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04604ACF2E98D98F00294A7E;
+			remoteInfo = BuddaWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		043C55A52E82EC9C00EAA66D /* Embed Frameworks */ = {
@@ -29,10 +42,24 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		04604AE22E98D99100294A7E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				04604AE12E98D99100294A7E /* BuddaWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		043FD0742DC26CC6002C03A6 /* TalkToBudda.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TalkToBudda.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04604AD02E98D98F00294A7E /* BuddaWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BuddaWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		04604AD12E98D99000294A7E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		04604AD32E98D99000294A7E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		04AA619B2DD393D70057841B /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -74,6 +101,13 @@
 			);
 			target = 043FD0732DC26CC6002C03A6 /* TalkToBudda */;
 		};
+		04604AE62E98D99100294A7E /* Exceptions for "BuddaWidget" folder in "BuddaWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 04604ACF2E98D98F00294A7E /* BuddaWidgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -83,6 +117,14 @@
 				043FD0862DC26CC7002C03A6 /* Exceptions for "TalkToBudda" folder in "TalkToBudda" target */,
 			);
 			path = TalkToBudda;
+			sourceTree = "<group>";
+		};
+		04604AD52E98D99000294A7E /* BuddaWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				04604AE62E98D99100294A7E /* Exceptions for "BuddaWidget" folder in "BuddaWidgetExtension" target */,
+			);
+			path = BuddaWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -102,6 +144,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		04604ACD2E98D98F00294A7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04604AD42E98D99000294A7E /* SwiftUI.framework in Frameworks */,
+				04604AD22E98D99000294A7E /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -109,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				043FD0762DC26CC6002C03A6 /* TalkToBudda */,
+				04604AD52E98D99000294A7E /* BuddaWidget */,
 				04AA619A2DD393D70057841B /* Frameworks */,
 				043FD0752DC26CC6002C03A6 /* Products */,
 			);
@@ -118,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				043FD0742DC26CC6002C03A6 /* TalkToBudda.app */,
+				04604AD02E98D98F00294A7E /* BuddaWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -126,6 +179,8 @@
 			isa = PBXGroup;
 			children = (
 				04AA619B2DD393D70057841B /* StoreKit.framework */,
+				04604AD12E98D99000294A7E /* WidgetKit.framework */,
+				04604AD32E98D99000294A7E /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -141,10 +196,12 @@
 				043FD0712DC26CC6002C03A6 /* Frameworks */,
 				043FD0722DC26CC6002C03A6 /* Resources */,
 				043C55A52E82EC9C00EAA66D /* Embed Frameworks */,
+				04604AE22E98D99100294A7E /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				04604AE02E98D99100294A7E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				043FD0762DC26CC6002C03A6 /* TalkToBudda */,
@@ -161,6 +218,28 @@
 			productName = TalkToBudda;
 			productReference = 043FD0742DC26CC6002C03A6 /* TalkToBudda.app */;
 			productType = "com.apple.product-type.application";
+		};
+		04604ACF2E98D98F00294A7E /* BuddaWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04604AE52E98D99100294A7E /* Build configuration list for PBXNativeTarget "BuddaWidgetExtension" */;
+			buildPhases = (
+				04604ACC2E98D98F00294A7E /* Sources */,
+				04604ACD2E98D98F00294A7E /* Frameworks */,
+				04604ACE2E98D98F00294A7E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				04604AD52E98D99000294A7E /* BuddaWidget */,
+			);
+			name = BuddaWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = BuddaWidgetExtension;
+			productReference = 04604AD02E98D98F00294A7E /* BuddaWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -182,6 +261,9 @@
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					043FD0732DC26CC6002C03A6 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					04604ACF2E98D98F00294A7E = {
 						CreatedOnToolsVersion = 16.2;
 					};
 				};
@@ -207,12 +289,20 @@
 			projectRoot = "";
 			targets = (
 				043FD0732DC26CC6002C03A6 /* TalkToBudda */,
+				04604ACF2E98D98F00294A7E /* BuddaWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		043FD0722DC26CC6002C03A6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04604ACE2E98D98F00294A7E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -229,7 +319,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		04604ACC2E98D98F00294A7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		04604AE02E98D99100294A7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04604ACF2E98D98F00294A7E /* BuddaWidgetExtension */;
+			targetProxy = 04604ADF2E98D99100294A7E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		043FD0882DC26CC7002C03A6 /* Debug */ = {
@@ -238,7 +343,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = F59XSVKP6X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TalkToBudda/Info.plist;
@@ -253,7 +358,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = hai.codetu.TalkToBudda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -272,7 +377,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = F59XSVKP6X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TalkToBudda/Info.plist;
@@ -287,7 +392,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = hai.codetu.TalkToBudda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -419,6 +524,70 @@
 			};
 			name = Release;
 		};
+		04604AE32E98D99100294A7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F59XSVKP6X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BuddaWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BuddaWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = hai.codetu.TalkToBudda.BuddaWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		04604AE42E98D99100294A7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F59XSVKP6X;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BuddaWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BuddaWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = hai.codetu.TalkToBudda.BuddaWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -436,6 +605,15 @@
 			buildConfigurations = (
 				043FD0882DC26CC7002C03A6 /* Debug */,
 				043FD0892DC26CC7002C03A6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04604AE52E98D99100294A7E /* Build configuration list for PBXNativeTarget "BuddaWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04604AE32E98D99100294A7E /* Debug */,
+				04604AE42E98D99100294A7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
