@@ -9,6 +9,11 @@ import SnapKit
 import UIKit
 
 class StoreOnePolicyActionView: UIView {
+    enum Style {
+        case standard
+        case forest
+    }
+
     // Callback closures
     var onPrivacyTapped: (() -> Void)?
     var onRestoreTapped: (() -> Void)?
@@ -16,14 +21,18 @@ class StoreOnePolicyActionView: UIView {
 
     private let stackView = UIStackView()
     private let topPadding: CGFloat
-    init(topPadding: CGFloat = 0) {
+    private let style: Style
+
+    init(topPadding: CGFloat = 0, style: Style = .standard) {
         self.topPadding = topPadding
+        self.style = style
         super.init(frame: .zero)
         setupView()
     }
 
     required init?(coder: NSCoder) {
         self.topPadding = 0
+        self.style = .standard
         super.init(coder: coder)
         setupView()
     }
@@ -34,13 +43,18 @@ class StoreOnePolicyActionView: UIView {
         stackView.distribution = .equalSpacing
         stackView.spacing = 16
 
-        let privacyButton = makeButton(title: "Privacy Policy", font: FontFamily.SFPro.regular.font(size: 12), textColor: .neutral950)
+        let actionTextColor = style == .forest ? UIColor(hexString: "#234B36") : UIColor.white.withAlphaComponent(0.92)
+        let restoreTextColor = style == .forest ? UIColor(hexString: "#234B36") : UIColor(hexString: "#4B2F14")
+        let privacyButton = makeButton(title: "Privacy Policy", font: FontFamily.SFPro.regular.font(size: 13), textColor: actionTextColor)
         privacyButton.addTarget(self, action: #selector(handlePrivacy), for: .touchUpInside)
 
-        let restoreButton = makeButton(title: "Restore", font: FontFamily.SFPro.bold.font(size: 12), textColor: .black)
+        let restoreButton = makeButton(title: "Restore", font: FontFamily.SFPro.bold.font(size: 13), textColor: restoreTextColor)
+        restoreButton.backgroundColor = style == .forest ? UIColor(hexString: "#F0EFE8") : UIColor.white.withAlphaComponent(0.78)
+        restoreButton.layer.cornerRadius = 12
+        restoreButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 14, bottom: 8, right: 14)
         restoreButton.addTarget(self, action: #selector(handleRestore), for: .touchUpInside)
 
-        let termsButton = makeButton(title: "Term Of Use", font: FontFamily.SFPro.regular.font(size: 12), textColor: .neutral950)
+        let termsButton = makeButton(title: "Term Of Use", font: FontFamily.SFPro.regular.font(size: 13), textColor: actionTextColor)
         termsButton.addTarget(self, action: #selector(handleTerms), for: .touchUpInside)
 
         [privacyButton, restoreButton, termsButton].forEach { stackView.addArrangedSubview($0) }

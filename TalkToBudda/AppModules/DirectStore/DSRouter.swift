@@ -20,7 +20,7 @@ class DSRouter {
             completion?()
             return }
         
-        let dsVC = PurchaseViewController()
+        let dsVC = PaywallV2ViewController()
         dsVC.modalPresentationStyle = .fullScreen
         vc.present(dsVC, animated: true, completion: completion)
     }
