@@ -13,10 +13,14 @@ class MeditationTableViewCell: UITableViewCell {
     // MARK: - UI Elements
     private let cardView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.white.withAlphaComponent(0.55)
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.68)
         view.layer.cornerRadius = 22
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(hexString: "#E3D4BF").cgColor
+        view.layer.borderColor = UIColor.white.withAlphaComponent(0.55).cgColor
+        view.layer.shadowColor = UIColor(hexString: "#C9AF90").cgColor
+        view.layer.shadowOpacity = 0.14
+        view.layer.shadowOffset = CGSize(width: 0, height: 12)
+        view.layer.shadowRadius = 18
         return view
     }()
 
@@ -41,7 +45,7 @@ class MeditationTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = FontFamily.Inter28pt.regular.font(size: 14)
         label.textColor = UIColor(hexString: "#6F6A63")
-        label.numberOfLines = 3
+        label.numberOfLines = 2
         return label
     }()
     
@@ -124,8 +128,18 @@ class MeditationTableViewCell: UITableViewCell {
     func configure(with meditation: MeditationCodable) {
         thumbnailImageView.image = Asset.Assets.icMeditation.image
         nameLabel.text = meditation.name
-        purposeLabel.text = meditation.purpose
+        purposeLabel.text = condensedPurpose(from: meditation.purpose)
 //        methodLabel.text = "Method: \(meditation.method)"
 //        benefitsLabel.text = "Benefits: \(meditation.benefits)"
+    }
+
+    private func condensedPurpose(from purpose: String) -> String {
+        let compact = purpose.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+        if compact.count <= 100 {
+            return compact
+        }
+
+        let index = compact.index(compact.startIndex, offsetBy: 97)
+        return String(compact[..<index]).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
     }
 }

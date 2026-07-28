@@ -9,12 +9,13 @@ import UIKit
 import SnapKit
 
 class InputBarView: UIView {
+    private let fieldContainerView = UIView()
 
     private lazy var textField: UITextField = {
         let textField = UITextField()
         textField.leftView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 18, height: 56)))
         textField.leftViewMode = .always
-        let placeholderText = "Ask your question and seek wisdom..."
+        let placeholderText = "Ask for guidance..."
         let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor(hexString: "#B8A28C"),
             .font: FontFamily.Inter28pt.regular.font(size: 17)
@@ -22,12 +23,8 @@ class InputBarView: UIView {
 
         textField.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: attributes)
         textField.font = FontFamily.Inter28pt.regular.font(size: 17)
-        textField.backgroundColor = UIColor(hexString: "#FBF6F0")
+        textField.backgroundColor = UIColor.clear
         textField.textColor = .color4B3621
-        textField.layer.cornerRadius = 22
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor(hexString: "#E9D8C5").cgColor
-        textField.clipsToBounds = true
         return textField
     }()
     
@@ -45,8 +42,14 @@ class InputBarView: UIView {
     private func setupUI() {
         backgroundColor = UIColor.clear
 
-        addSubview(textField)
+        addSubview(fieldContainerView)
+        fieldContainerView.addSubview(textField)
         addSubview(sendButton)
+
+        fieldContainerView.backgroundColor = UIColor.white.withAlphaComponent(0.82)
+        fieldContainerView.layer.cornerRadius = 24
+        fieldContainerView.layer.borderWidth = 1
+        fieldContainerView.layer.borderColor = UIColor(hexString: "#E9D8C5").cgColor
 
         let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .medium)
         sendButton.setImage(UIImage(systemName: "arrow.right", withConfiguration: config)?.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -56,11 +59,15 @@ class InputBarView: UIView {
         sendButton.layer.borderWidth = 1
         sendButton.layer.borderColor = UIColor(hexString: "#E0C7A6").cgColor
         
-        textField.snp.makeConstraints { make in
+        fieldContainerView.snp.makeConstraints { make in
             make.left.equalToSuperview()
             make.centerY.equalToSuperview()
             make.right.equalTo(sendButton.snp.left).offset(-8)
             make.height.equalTo(56)
+        }
+
+        textField.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
 
         sendButton.snp.makeConstraints { make in

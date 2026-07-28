@@ -18,6 +18,9 @@ class ChatViewController: UIViewController, ChatViewable {
     private let inputBar = InputBarView()
     private var selectedCharacter: CharacterType?
     private lazy var selectedGuide = Character(type: .buddha)
+    private let dockContainerView = UIView()
+    private var handoffCardTopConstraint: Constraint?
+    private var tableTopConstraint: Constraint?
     private lazy var navView: UIView = {
         let view = UIView()
 
@@ -68,7 +71,7 @@ class ChatViewController: UIViewController, ChatViewable {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Buddha"
-        label.font = FontFamily.PlayfairDisplay.bold.font(size: 30)
+        label.font = FontFamily.PlayfairDisplay.bold.font(size: 28)
         label.textAlignment = .center
         label.textColor = UIColor(hexString: "#4B3621")
         label.numberOfLines = 2
@@ -77,7 +80,7 @@ class ChatViewController: UIViewController, ChatViewable {
 
     private lazy var handoffCardView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(hexString: "#FCF7F1")
+        view.backgroundColor = UIColor(hexString: "#FCF8F3")
         view.layer.cornerRadius = 22
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor(hexString: "#EBDCCD").cgColor
@@ -89,7 +92,7 @@ class ChatViewController: UIViewController, ChatViewable {
         imageView.image = selectedGuide.avatarImage
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = UIColor(hexString: "#F4E8D8")
-        imageView.layer.cornerRadius = 20
+        imageView.layer.cornerRadius = 18
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -108,8 +111,8 @@ class ChatViewController: UIViewController, ChatViewable {
 
     private lazy var handoffTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "You are speaking with \(selectedGuide.name)"
-        label.font = FontFamily.PlayfairDisplay.bold.font(size: 20)
+        label.text = "With \(selectedGuide.name)"
+        label.font = FontFamily.PlayfairDisplay.bold.font(size: 18)
         label.textColor = UIColor(hexString: "#4B3621")
         label.numberOfLines = 0
         return label
@@ -118,9 +121,9 @@ class ChatViewController: UIViewController, ChatViewable {
     private lazy var handoffBodyLabel: UILabel = {
         let label = UILabel()
         label.text = selectedGuide.handoffSummary
-        label.font = FontFamily.Inter28pt.regular.font(size: 14)
+        label.font = FontFamily.Inter28pt.regular.font(size: 13)
         label.textColor = UIColor(hexString: "#755F4A")
-        label.numberOfLines = 2
+        label.numberOfLines = 1
         return label
     }()
 
@@ -132,8 +135,8 @@ class ChatViewController: UIViewController, ChatViewable {
 
     private lazy var premiumPromptView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(hexString: "#FBF6F0")
-        view.layer.cornerRadius = 22
+        view.backgroundColor = UIColor(hexString: "#FBF5EE")
+        view.layer.cornerRadius = 20
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor(hexString: "#E9D8C5").cgColor
         view.isHidden = true
@@ -149,7 +152,7 @@ class ChatViewController: UIViewController, ChatViewable {
 
     private lazy var chatCountLabel: UILabel = {
         let label = UILabel()
-        label.font = FontFamily.Inter28pt.medium.font(size: 16)
+        label.font = FontFamily.Inter28pt.medium.font(size: 15)
         label.textColor = UIColor(hexString: "#6C5034")
         label.textAlignment = .left
         return label
@@ -190,8 +193,10 @@ class ChatViewController: UIViewController, ChatViewable {
         view.addSubview(navView)
         view.addSubview(handoffCardView)
         view.addSubview(tableView)
-        view.addSubview(premiumPromptView)
-        view.addSubview(inputBar)
+        view.addSubview(dockContainerView)
+
+        dockContainerView.addSubview(premiumPromptView)
+        dockContainerView.addSubview(inputBar)
 
         navView.addSubview(backButton)
         navView.addSubview(characterButton)
@@ -206,6 +211,11 @@ class ChatViewController: UIViewController, ChatViewable {
         premiumPromptView.addSubview(chatCountLabel)
         premiumPromptView.addSubview(storeButton)
 
+        dockContainerView.backgroundColor = UIColor.white.withAlphaComponent(0.68)
+        dockContainerView.layer.cornerRadius = 28
+        dockContainerView.layer.borderWidth = 1
+        dockContainerView.layer.borderColor = UIColor.white.withAlphaComponent(0.78).cgColor
+
         tableView.register(ChatMessageCell.self, forCellReuseIdentifier: "ChatMessageCell")
         tableView.register(BuddaChatMessageCell.self, forCellReuseIdentifier: "BuddaChatMessageCell")
         tableView.register(ChatLoadingTVC.self, forCellReuseIdentifier: "ChatLoadingTVC")
@@ -215,7 +225,7 @@ class ChatViewController: UIViewController, ChatViewable {
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
-        tableView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 12, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 12, right: 0)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 120
 
@@ -230,56 +240,60 @@ class ChatViewController: UIViewController, ChatViewable {
 
         navView.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
-            make.height.equalTo(120)
+            make.height.equalTo(112)
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
 
         handoffCardView.snp.makeConstraints { make in
-            make.top.equalTo(navView.snp.bottom).offset(10)
+            handoffCardTopConstraint = make.top.equalTo(navView.snp.bottom).offset(8).constraint
             make.left.right.equalToSuperview().inset(24)
         }
 
         tableView.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
-            make.top.equalTo(handoffCardView.snp.bottom).offset(10)
-            make.bottom.equalTo(premiumPromptView.snp.top).offset(-8)
+            tableTopConstraint = make.top.equalTo(handoffCardView.snp.bottom).offset(6).constraint
+            make.bottom.equalTo(dockContainerView.snp.top).offset(-10)
         }
 
         handoffAvatarView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(16)
-            make.top.equalToSuperview().inset(16)
-            make.width.height.equalTo(40)
+            make.top.equalToSuperview().inset(14)
+            make.width.height.equalTo(36)
         }
 
         handoffBadgeLabel.snp.makeConstraints { make in
             make.left.equalTo(handoffAvatarView.snp.right).offset(12)
-            make.top.equalToSuperview().inset(16)
+            make.top.equalToSuperview().inset(14)
             make.height.equalTo(18)
         }
 
         handoffTitleLabel.snp.makeConstraints { make in
             make.left.equalTo(handoffBadgeLabel)
-            make.top.equalTo(handoffBadgeLabel.snp.bottom).offset(6)
+            make.top.equalTo(handoffBadgeLabel.snp.bottom).offset(4)
             make.right.equalToSuperview().inset(16)
         }
 
         handoffBodyLabel.snp.makeConstraints { make in
             make.left.equalTo(handoffTitleLabel)
-            make.top.equalTo(handoffTitleLabel.snp.bottom).offset(4)
+            make.top.equalTo(handoffTitleLabel.snp.bottom).offset(2)
             make.right.equalToSuperview().inset(16)
-            make.bottom.equalToSuperview().inset(14)
+            make.bottom.equalToSuperview().inset(12)
+        }
+
+        dockContainerView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-8)
         }
 
         premiumPromptView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(24)
-            make.bottom.equalTo(inputBar.snp.top).offset(-14)
-            make.height.equalTo(64)
+            make.top.left.right.equalToSuperview().inset(8)
+            make.height.equalTo(54)
         }
 
         premiumIconView.snp.makeConstraints { make in
             make.left.equalToSuperview().inset(16)
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(20)
+            make.width.height.equalTo(18)
         }
 
         chatCountLabel.snp.makeConstraints { make in
@@ -291,13 +305,14 @@ class ChatViewController: UIViewController, ChatViewable {
         storeButton.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(10)
             make.centerY.equalToSuperview()
-            make.width.equalTo(94)
-            make.height.equalTo(40)
+            make.width.equalTo(106)
+            make.height.equalTo(38)
         }
 
         inputBar.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(24)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10)
+            make.top.equalTo(premiumPromptView.snp.bottom).offset(6)
+            make.left.right.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().inset(8)
             make.height.equalTo(56)
         }
 
@@ -314,12 +329,12 @@ class ChatViewController: UIViewController, ChatViewable {
         }
 
         subtitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(characterButton.snp.bottom).offset(18)
+            make.top.equalTo(characterButton.snp.bottom).offset(14)
             make.leading.trailing.equalToSuperview().inset(24)
         }
 
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(subtitleLabel.snp.bottom).offset(4)
+            make.top.equalTo(subtitleLabel.snp.bottom).offset(2)
             make.leading.trailing.equalToSuperview().inset(24)
             make.centerX.equalToSuperview()
         }
@@ -412,6 +427,8 @@ class ChatViewController: UIViewController, ChatViewable {
     private func updatePremiumPromptVisibility() {
         let isPremium = StoreKitManager.shared.isPremium
         premiumPromptView.isHidden = isPremium
+        dockContainerView.layer.opacity = isPremium ? 0.0 : 1.0
+        updateConversationLayout(isPremium: isPremium)
 
         if !isPremium {
             updateChatCountLabel()
@@ -424,6 +441,12 @@ class ChatViewController: UIViewController, ChatViewable {
         let remainingCount = max(0, totalChat - currentChatCount)
 
         chatCountLabel.text = "\(remainingCount) chats remaining"
+    }
+
+    private func updateConversationLayout(isPremium: Bool) {
+        premiumPromptView.alpha = isPremium ? 0 : 1
+        handoffCardTopConstraint?.update(offset: 8)
+        tableTopConstraint?.update(offset: messages.count <= 1 ? 12 : 6)
     }
 
     // MARK: - Keyboard Handling
@@ -458,11 +481,8 @@ class ChatViewController: UIViewController, ChatViewable {
         let safeAreaBottom = view.safeAreaInsets.bottom
 
         UIView.animate(withDuration: animationDuration) {
-            self.inputBar.snp.updateConstraints { make in
+            self.dockContainerView.snp.updateConstraints { make in
                 make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-keyboardHeight + safeAreaBottom - 8)
-            }
-            self.premiumPromptView.snp.updateConstraints { make in
-                make.bottom.equalTo(self.inputBar.snp.top).offset(-8)
             }
             self.view.layoutIfNeeded()
         }
@@ -479,11 +499,8 @@ class ChatViewController: UIViewController, ChatViewable {
         }
 
         UIView.animate(withDuration: animationDuration) {
-            self.inputBar.snp.updateConstraints { make in
+            self.dockContainerView.snp.updateConstraints { make in
                 make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-8)
-            }
-            self.premiumPromptView.snp.updateConstraints { make in
-                make.bottom.equalTo(self.inputBar.snp.top).offset(-8)
             }
             self.view.layoutIfNeeded()
         }
@@ -543,7 +560,7 @@ extension ChatViewController: CharacterSelectionDelegate {
     private func refreshGuideHandoff() {
         handoffAvatarView.image = selectedGuide.avatarImage
         handoffBadgeLabel.text = selectedGuide.bestForLabel
-        handoffTitleLabel.text = "You are speaking with \(selectedGuide.name)"
+        handoffTitleLabel.text = "With \(selectedGuide.name)"
         handoffBodyLabel.text = selectedGuide.handoffSummary
     }
 }

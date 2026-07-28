@@ -2,6 +2,12 @@
 
 This folder is a dedicated loop for reviewing app flows in TalkToBudda.
 
+UI review pack:
+- `UI-REVIEW-PACK-README.md`: entrypoint for the reusable UI review materials
+- `ui-review-checklist.md`: reusable review checklist for `P0` / `P1` / `P2`
+- `implementation-checklist-ui-p1.md`: current high-priority iOS implementation checklist
+- `design-token-component-checklist.md`: shared token and component rules for UI cleanup
+
 Structure:
 - `input/`: product-flow briefs, screenshots, scenarios, acceptance criteria
 - `reviews/`: Codex writes flow review reports here

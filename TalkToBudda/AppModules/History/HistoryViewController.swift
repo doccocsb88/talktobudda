@@ -22,12 +22,15 @@ final class HistoryViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let tableView = UITableView()
     private var conversations: [ConversationCodable] = []
+    private let summaryCardView = UIView()
+    private let summaryLabel = UILabel()
     private lazy var backgroundImageView: UIImageView = {
         let imageView = UIImageView(image: Asset.Assets.buddaConversation.image)
         imageView.contentMode = .scaleAspectFill
-        imageView.alpha = 0.3
+        imageView.alpha = 0.14
         return imageView
     }()
+    private let backgroundOverlayView = UIView()
     
     // MARK: - Lifecycle -
     
@@ -46,30 +49,57 @@ final class HistoryViewController: UIViewController {
     private func setupTableView() {
         let titleLabel = UILabel()
         titleLabel.text = "History"
-        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 24)
+        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 28)
         titleLabel.textAlignment = .center
         titleLabel.textColor = UIColor(hexString: "#4B3621")
-        
-        titleLabel.textAlignment = .center
-        
+
+        backgroundOverlayView.backgroundColor = UIColor.white.withAlphaComponent(0.24)
+
         view.addSubview(backgroundImageView)
+        view.addSubview(backgroundOverlayView)
         view.addSubview(tableView)
         view.addSubview(titleLabel)
+        view.addSubview(summaryCardView)
+        summaryCardView.addSubview(summaryLabel)
+
+        summaryCardView.backgroundColor = UIColor.white.withAlphaComponent(0.58)
+        summaryCardView.layer.cornerRadius = 22
+        summaryCardView.layer.borderWidth = 1
+        summaryCardView.layer.borderColor = UIColor.white.withAlphaComponent(0.45).cgColor
+
+        summaryLabel.font = FontFamily.Inter28pt.medium.font(size: 14)
+        summaryLabel.textColor = UIColor(hexString: "#6E6257")
+        summaryLabel.numberOfLines = 0
+        summaryLabel.text = "Return to a past conversation or begin a fresh question from the empty state."
+
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
             $0.centerX.equalToSuperview()
+        }
+
+        summaryCardView.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(16)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+        summaryLabel.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(16)
         }
         
         backgroundImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
+        backgroundOverlayView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         tableView.snp.makeConstraints { make in
             make.left.right.bottom.equalToSuperview()
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+            make.top.equalTo(summaryCardView.snp.bottom).offset(12)
         }
-        
+
         tableView.backgroundColor = .clear
+        tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 20, right: 0)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none

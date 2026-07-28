@@ -171,13 +171,13 @@ class CharacterSelectionViewController: UIViewController {
 
         let recommendedLabel = UILabel()
         recommendedLabel.text = "Recommended"
-        recommendedLabel.font = FontFamily.Inter28pt.semiBold.font(size: 12)
+        recommendedLabel.font = FontFamily.Inter28pt.medium.font(size: 11)
         recommendedLabel.textColor = UIColor(hexString: "#8F6A41")
-        recommendedLabel.backgroundColor = UIColor(hexString: "#F8E6C7")
+        recommendedLabel.backgroundColor = UIColor(hexString: "#FAEFD9")
         recommendedLabel.textAlignment = .center
         recommendedLabel.layer.cornerRadius = 10
         recommendedLabel.layer.borderWidth = 1
-        recommendedLabel.layer.borderColor = UIColor(hexString: "#E4C48F").cgColor
+        recommendedLabel.layer.borderColor = UIColor(hexString: "#EAD6AF").cgColor
         recommendedLabel.clipsToBounds = true
         recommendedLabel.isHidden = !(shouldShowRecommendedStarter && characterType == .buddha)
 
@@ -187,8 +187,8 @@ class CharacterSelectionViewController: UIViewController {
         titleRow.spacing = 8
 
         let descriptionLabel = UILabel()
-        descriptionLabel.text = character.description
-        descriptionLabel.font = FontFamily.Inter28pt.regular.font(size: 17)
+        descriptionLabel.text = condensedDescription(character.description)
+        descriptionLabel.font = FontFamily.Inter28pt.regular.font(size: 16)
         descriptionLabel.textColor = UIColor(hexString: "#6B5B4F")
         descriptionLabel.numberOfLines = 2
 
@@ -221,18 +221,18 @@ class CharacterSelectionViewController: UIViewController {
         avatarImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(60)
+            make.width.height.equalTo(58)
         }
 
         titleRow.snp.makeConstraints { make in
             make.leading.equalTo(avatarImageView.snp.trailing).offset(16)
-            make.top.equalToSuperview().offset(18)
+            make.top.equalToSuperview().offset(16)
             make.trailing.lessThanOrEqualTo(chevronContainer.snp.leading).offset(-12)
         }
 
         recommendedLabel.snp.makeConstraints { make in
             make.height.equalTo(20)
-            make.width.greaterThanOrEqualTo(92)
+            make.width.greaterThanOrEqualTo(86)
         }
 
         bestForLabel.snp.makeConstraints { make in
@@ -243,9 +243,9 @@ class CharacterSelectionViewController: UIViewController {
 
         descriptionLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleRow)
-            make.top.equalTo(bestForLabel.snp.bottom).offset(8)
+            make.top.equalTo(bestForLabel.snp.bottom).offset(6)
             make.trailing.lessThanOrEqualTo(chevronContainer.snp.leading).offset(-12)
-            make.bottom.equalToSuperview().offset(-18)
+            make.bottom.equalToSuperview().offset(-16)
         }
 
         chevronContainer.snp.makeConstraints { make in
@@ -262,10 +262,20 @@ class CharacterSelectionViewController: UIViewController {
         containerView.addGestureRecognizer(tapGesture)
         containerView.tag = characterType.hashValue
         containerView.snp.makeConstraints { make in
-            make.height.greaterThanOrEqualTo(124)
+            make.height.greaterThanOrEqualTo(118)
         }
 
         return containerView
+    }
+
+    private func condensedDescription(_ description: String) -> String {
+        let compact = description.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+        if compact.count <= 88 {
+            return compact
+        }
+
+        let index = compact.index(compact.startIndex, offsetBy: 85)
+        return String(compact[..<index]).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
     }
 
     @objc private func characterTapped(_ gesture: UITapGestureRecognizer) {

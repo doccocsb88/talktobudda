@@ -10,15 +10,20 @@ import UIKit
 
 class OnboardingViewController: UIViewController {
     private let scrollView = UIScrollView()
+    private let ambientView = UIView()
     private lazy var nextButton: UIButton = {
         let button = UIButton()
         button.isHidden = true
         button.isUserInteractionEnabled = true
         button.setTitle("Start the Journey", for: .normal)
-        button.setTitleColor(.color4B3621, for: .normal)
-        button.titleLabel?.font = FontFamily.SFPro.medium.font(size: 18)
-        button.backgroundColor = .colorFDF6ED
-        button.rounded(radius: 12, borderWidth: 1, borderColor: .color4B3621)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = FontFamily.PlayfairDisplay.bold.font(size: 18)
+        button.backgroundColor = UIColor(hexString: "#B77945")
+        button.rounded(radius: 16, borderWidth: 0, borderColor: .clear)
+        button.layer.shadowColor = UIColor(hexString: "#9E6A40").cgColor
+        button.layer.shadowOpacity = 0.24
+        button.layer.shadowOffset = CGSize(width: 0, height: 12)
+        button.layer.shadowRadius = 20
         button.addTarget(self, action: #selector(tappedNextButton(_:)), for: .touchUpInside)
         return button
     }()
@@ -79,7 +84,9 @@ class OnboardingViewController: UIViewController {
     }
 
     private func setupScrollView() {
+        view.addSubview(ambientView)
         view.addSubview(scrollView)
+        ambientView.backgroundColor = .clear
         scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
@@ -87,6 +94,10 @@ class OnboardingViewController: UIViewController {
         scrollView.isUserInteractionEnabled = true
         scrollView.delegate = self
         
+        ambientView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -127,7 +138,7 @@ class OnboardingViewController: UIViewController {
         view.addSubview(pageControl)
         view.addSubview(nextButton)
         nextButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-18)
             make.centerX.equalToSuperview()
             make.left.equalToSuperview().offset(24)
             make.height.equalTo(58.scaleHeight(max: 58, min: 50))
@@ -136,6 +147,23 @@ class OnboardingViewController: UIViewController {
         pageControl.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalTo(nextButton.snp.centerY)
+        }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if ambientView.layer.sublayers?.isEmpty != false {
+            let topGlow = CAGradientLayer()
+            topGlow.colors = [
+                UIColor(hexString: "#F3E0BF").withAlphaComponent(0.85).cgColor,
+                UIColor.clear.cgColor
+            ]
+            topGlow.startPoint = CGPoint(x: 0.5, y: 0)
+            topGlow.endPoint = CGPoint(x: 0.5, y: 1)
+            topGlow.frame = ambientView.bounds
+            ambientView.layer.insertSublayer(topGlow, at: 0)
+        } else {
+            ambientView.layer.sublayers?.first?.frame = ambientView.bounds
         }
     }
 
@@ -158,7 +186,6 @@ class OnboardingViewController: UIViewController {
     }
 
     @objc func tappedNextButton(_ sender: UIButton) {
-        debugPrint("hai log next \(currentPageIndex) -> \(pages.count)")
         currentPageIndex += 1
         if currentPageIndex < pages.count {
             scrollTo(index: currentPageIndex)

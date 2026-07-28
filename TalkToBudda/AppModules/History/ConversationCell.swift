@@ -16,6 +16,7 @@ class ConversationCell: UITableViewCell {
     private let answerLabel = UILabel()
     private let dateLabel = UILabel()
     private let characterImageView = UIImageView()
+    private let badgeLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -31,6 +32,7 @@ class ConversationCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        addShadow()
     }
     
     func addShadow() {
@@ -42,10 +44,10 @@ class ConversationCell: UITableViewCell {
         ] // tất cả góc
         placeHolderView.layer.masksToBounds = false
 
-        placeHolderView.layer.shadowColor = UIColor.black.cgColor
-        placeHolderView.layer.shadowOffset = CGSize(width: 4, height: 2) // X = 2, Y = 1
-        placeHolderView.layer.shadowRadius = 3 // Blur = 6 → Radius = Blur / 2 = 3
-        placeHolderView.layer.shadowOpacity = 0.1 // 6%
+        placeHolderView.layer.shadowColor = UIColor(hexString: "#D9C8B1").cgColor
+        placeHolderView.layer.shadowOffset = CGSize(width: 0, height: 8)
+        placeHolderView.layer.shadowRadius = 12
+        placeHolderView.layer.shadowOpacity = 0.14
 
         // Shadow path để khớp với bo góc
         let path = UIBezierPath(roundedRect: placeHolderView.bounds,
@@ -60,19 +62,28 @@ class ConversationCell: UITableViewCell {
         contentView.backgroundColor = .clear
         contentView.addSubview(placeHolderView)
         
-        [characterImageView, titleLabel, answerLabel, dateLabel].forEach({placeHolderView.addSubview($0)})
+        [characterImageView, titleLabel, answerLabel, dateLabel, badgeLabel].forEach({placeHolderView.addSubview($0)})
         
-        titleLabel.font = FontFamily.FiraMono.bold.font(size: 16)
+        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 18)
         titleLabel.textColor = UIColor(hexString: "#4B3B2A")
+        titleLabel.numberOfLines = 2
 
-        answerLabel.font = FontFamily.FiraMono.regular.font(size: 16)
-        answerLabel.textColor = UIColor(hexString: "#4B3B2A")
+        answerLabel.font = FontFamily.Inter28pt.regular.font(size: 15)
+        answerLabel.textColor = UIColor(hexString: "#6E6256")
         answerLabel.numberOfLines = 2
                 
-        dateLabel.font = FontFamily.FiraMono.regular.font(size: 12)
-        dateLabel.textColor = UIColor(hexString: "#2E2E2E")
+        dateLabel.font = FontFamily.Inter28pt.regular.font(size: 12)
+        dateLabel.textColor = UIColor(hexString: "#7E746A")
+
+        badgeLabel.font = FontFamily.Inter28pt.medium.font(size: 10)
+        badgeLabel.textColor = UIColor(hexString: "#8D6643")
+        badgeLabel.backgroundColor = UIColor(hexString: "#F4E5CF")
+        badgeLabel.layer.cornerRadius = 10
+        badgeLabel.layer.masksToBounds = true
+        badgeLabel.textAlignment = .center
+        badgeLabel.text = "Recent"
         
-        placeHolderView.backgroundColor = UIColor(hexString: "FDF8E3")
+        placeHolderView.backgroundColor = UIColor.white.withAlphaComponent(0.82)
         placeHolderView.rounded(radius: 16)
         
         characterImageView.backgroundColor = UIColor(hexString: "E3D0BF")
@@ -92,7 +103,7 @@ class ConversationCell: UITableViewCell {
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(characterImageView.snp.top).offset(-8)
+            make.top.equalToSuperview().inset(14)
             make.trailing.equalToSuperview().inset(12)
             make.left.equalTo(characterImageView.snp.right).offset(8)
         }
@@ -105,8 +116,15 @@ class ConversationCell: UITableViewCell {
  
         dateLabel.snp.makeConstraints { make in
             make.top.equalTo(answerLabel.snp.bottom).offset(12)
-            make.trailing.equalToSuperview().inset(16)
+            make.leading.equalTo(titleLabel.snp.leading)
             make.bottom.equalToSuperview().inset(16)
+        }
+
+        badgeLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(dateLabel)
+            make.trailing.equalToSuperview().inset(16)
+            make.height.equalTo(20)
+            make.width.greaterThanOrEqualTo(52)
         }
     }
 
@@ -130,6 +148,7 @@ class ConversationCell: UITableViewCell {
         // Display character information
         let character = conversation.selectedCharacter ?? .buddha
         characterImageView.image = character.avatarImage
+        badgeLabel.text = character.displayName.lowercased()
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short

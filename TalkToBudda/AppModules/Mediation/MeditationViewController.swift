@@ -13,6 +13,8 @@ import RxSwift
 
 final class MeditationMoodViewController: UIViewController, MeditationMoodViewable {
     var presenter: MeditationMoodPresentable?
+    private let introCardView = UIView()
+    private let introLabel = UILabel()
     
     private let moodQuestionLabel: UILabel = {
         let label = UILabel()
@@ -29,10 +31,14 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
     private let startButton: UIButton = {
         let button = UIButton()
         button.setTitle("Start Meditation", for: .normal)
-        button.setTitleColor(.color4B3621, for: .normal)
-        button.titleLabel?.font = FontFamily.PlayfairDisplay.medium.font(size: 16)
-        button.backgroundColor = UIColor(hexString: "#EFD3A3")
-        button.rounded(radius: 16, borderWidth: 1.5, borderColor: .color4B3621)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = FontFamily.PlayfairDisplay.bold.font(size: 18)
+        button.backgroundColor = UIColor(hexString: "#B77945")
+        button.rounded(radius: 18, borderWidth: 0, borderColor: .clear)
+        button.layer.shadowColor = UIColor(hexString: "#A36D45").cgColor
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowOffset = CGSize(width: 0, height: 12)
+        button.layer.shadowRadius = 18
         button.addTarget(self, action: #selector(startMeditationTapped), for: .touchUpInside)
         return button
     }()
@@ -40,7 +46,7 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "Meditation"
-        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 24)
+        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 28)
         titleLabel.textAlignment = .center
         titleLabel.textColor = UIColor(hexString: "#4B3621")
         
@@ -81,7 +87,7 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
     func updateSelectedMood(_ mood: Mood) {
         selectedMood = mood
         for (i, btn) in moodButtons.enumerated() {
-            btn.alpha = (Mood.allCases[i] == mood) ? 1.0 : 0.3
+            btn.updateSelection(isSelected: Mood.allCases[i] == mood)
         }
     }
     
@@ -90,7 +96,18 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
         navigationController?.setNavigationBarHidden(true, animated: false)
         view.backgroundColor = .colorFDF6ED
         
-        [navView, moodQuestionLabel, moodQuestionLabel, moodStackView, startButton, mediationTableView].forEach({view.addSubview($0)})
+        [navView, moodQuestionLabel, introCardView, moodStackView, startButton, mediationTableView].forEach({view.addSubview($0)})
+        introCardView.addSubview(introLabel)
+
+        introCardView.backgroundColor = UIColor.white.withAlphaComponent(0.58)
+        introCardView.layer.cornerRadius = 22
+        introCardView.layer.borderWidth = 1
+        introCardView.layer.borderColor = UIColor.white.withAlphaComponent(0.45).cgColor
+
+        introLabel.font = FontFamily.Inter28pt.medium.font(size: 14)
+        introLabel.textColor = UIColor(hexString: "#6E6257")
+        introLabel.numberOfLines = 0
+        introLabel.text = "Choose the mood that best matches this moment, then start with a practice shaped for it."
 
         
         navView.addSubview(titleLabel)
@@ -109,6 +126,15 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
             $0.top.equalTo(navView.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
         }
+
+        introCardView.snp.makeConstraints { make in
+            make.top.equalTo(moodQuestionLabel.snp.bottom).offset(14)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+        introLabel.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(16)
+        }
         
         // Mood buttons
         moodStackView.axis = .horizontal
@@ -117,7 +143,7 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
         moodStackView.spacing = 16
 
         moodStackView.snp.makeConstraints {
-            $0.top.equalTo(moodQuestionLabel.snp.bottom).offset(0)
+            $0.top.equalTo(introCardView.snp.bottom).offset(8)
             $0.left.right.equalToSuperview().inset(30)
             $0.height.equalTo(100)
         }

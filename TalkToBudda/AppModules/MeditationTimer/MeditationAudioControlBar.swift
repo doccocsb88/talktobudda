@@ -9,15 +9,20 @@ import UIKit
 
 final class MeditationAudioControlBar: UIView {
     private let contentCard = UIView()
+    private let sectionLabel = UILabel()
 
     let titleLabel: UIButton = {
         let label = UIButton()
-        label.setImage(Asset.Assets.icSearch.image, for: .normal)
-        label.setTitle("Sound: Bamboo Flute", for: .normal)
+        label.setImage(Asset.Assets.icVolumeOn.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        label.setTitle("Meditation vocal pad", for: .normal)
         label.setTitleColor(.color4B3621, for: .normal)
-        label.titleLabel?.font = FontFamily.FiraMono.medium.font(size: 14)
+        label.titleLabel?.font = FontFamily.PlayfairDisplay.medium.font(size: 16)
         label.imageView?.contentMode = .scaleAspectFit
-        label.imageEdgeInsets = UIEdgeInsets(top: 0, left: -8, bottom: 0, right: 8)
+        label.tintColor = UIColor(hexString: "99713A")
+        label.contentHorizontalAlignment = .left
+        label.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        label.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        label.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
         return label
     }()
 
@@ -55,34 +60,44 @@ final class MeditationAudioControlBar: UIView {
 
     
     private func setupUI() {
-        contentCard.backgroundColor = UIColor.white.withAlphaComponent(0.28)
-        contentCard.layer.cornerRadius = 20
+        contentCard.backgroundColor = UIColor.white.withAlphaComponent(0.52)
+        contentCard.layer.cornerRadius = 22
         contentCard.layer.borderWidth = 1
-        contentCard.layer.borderColor = UIColor(hexString: "E5D8C4").cgColor
+        contentCard.layer.borderColor = UIColor(hexString: "E7D8C2").cgColor
+
+        sectionLabel.text = "Background sound"
+        sectionLabel.textColor = UIColor(hexString: "#8D6E4C")
+        sectionLabel.font = FontFamily.Inter28pt.medium.font(size: 12)
 
         addSubview(contentCard)
-        [titleLabel, volumeSlider, muteButton].forEach(contentCard.addSubview)
+        [sectionLabel, titleLabel, volumeSlider, muteButton].forEach(contentCard.addSubview)
 
         contentCard.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
 
+        sectionLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(14)
+            $0.left.right.equalToSuperview().inset(16)
+        }
+
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(12)
-            $0.centerX.equalToSuperview()
+            $0.top.equalTo(sectionLabel.snp.bottom).offset(6)
+            $0.left.right.equalToSuperview().inset(16)
             $0.height.equalTo(30)
         }
 
         muteButton.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(8)
-            $0.right.equalToSuperview().inset(12)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(12)
+            $0.right.equalToSuperview().inset(14)
             $0.width.height.equalTo(40)
         }
         
         volumeSlider.snp.makeConstraints {
             $0.centerY.equalTo(muteButton.snp.centerY)
-            $0.left.equalToSuperview().inset(14)
+            $0.left.equalToSuperview().inset(16)
             $0.right.equalTo(muteButton.snp.left).offset(-8)
+            $0.bottom.equalToSuperview().inset(16)
         }
         
         muteButton.addTarget(self, action: #selector(tappedMuteButton(_:)), for: .touchUpInside)

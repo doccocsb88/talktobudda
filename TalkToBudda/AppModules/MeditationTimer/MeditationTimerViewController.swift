@@ -39,6 +39,7 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
     private let backButton = UIButton()
     private let timerCardView = UIView()
     private let donateCardView = UIView()
+    private let controlsStackView = UIStackView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,12 +102,12 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
     }
     
     private func setupUI() {
-        [backgroundImageView, navView, quoteLabel, timerCardView, audioView, donateCardView].forEach({view.addSubview($0)})
+        [backgroundImageView, navView, quoteLabel, timerCardView, audioView, controlsStackView, donateCardView].forEach({view.addSubview($0)})
         [titleLabel, backButton].forEach({navView.addSubview($0)})
         timerCardView.addSubview(timerLabel)
         donateCardView.addSubview(donateButton)
         donateCardView.addSubview(donateLabel)
-        backgroundImageView.alpha = 0.3
+        backgroundImageView.alpha = 0.18
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -153,44 +154,42 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
         quoteLabel.text = "Let your soul be still..."
         quoteLabel.textAlignment = .center
         quoteLabel.numberOfLines = 0
-        quoteLabel.font = FontFamily.PlayfairDisplay.italic.font(size: 16)
-        quoteLabel.textColor = UIColor(hexString: "#7D5A4F").withAlphaComponent(0.88)
+        quoteLabel.font = FontFamily.PlayfairDisplay.italic.font(size: 13)
+        quoteLabel.textColor = UIColor(hexString: "#8A6B57").withAlphaComponent(0.7)
         quoteLabel.snp.makeConstraints {
-            $0.top.equalTo(navView.snp.bottom).offset(24)
+            $0.top.equalTo(navView.snp.bottom).offset(18)
             $0.centerX.equalToSuperview()
-            $0.left.right.equalToSuperview().inset(28)
+            $0.left.right.equalToSuperview().inset(40)
         }
         
         timerLabel.text = "00:10:00"
-        timerLabel.font = FontFamily.Inter28pt.semiBold.font(size: 60)
+        timerLabel.font = FontFamily.Inter28pt.semiBold.font(size: 68)
         timerLabel.textAlignment = .center
         timerLabel.textColor = UIColor(hexString: "C09A5B")
 
-        timerCardView.backgroundColor = UIColor.white.withAlphaComponent(0.18)
-        timerCardView.layer.cornerRadius = 28
+        timerCardView.backgroundColor = UIColor.white.withAlphaComponent(0.34)
+        timerCardView.layer.cornerRadius = 30
         timerCardView.layer.borderWidth = 1
-        timerCardView.layer.borderColor = UIColor.white.withAlphaComponent(0.35).cgColor
+        timerCardView.layer.borderColor = UIColor.white.withAlphaComponent(0.55).cgColor
+        timerCardView.layer.shadowColor = UIColor(hexString: "#E4D2BA").cgColor
+        timerCardView.layer.shadowOpacity = 0.32
+        timerCardView.layer.shadowRadius = 22
+        timerCardView.layer.shadowOffset = CGSize(width: 0, height: 12)
         timerCardView.snp.makeConstraints {
-            $0.top.equalTo(quoteLabel.snp.bottom).offset(26)
-            $0.left.right.equalToSuperview().inset(28)
-            $0.height.equalTo(170)
+            $0.top.equalTo(quoteLabel.snp.bottom).offset(18)
+            $0.left.right.equalToSuperview().inset(24)
+            $0.height.equalTo(190)
         }
 
         timerLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
         
-        let buttonStack = UIStackView(arrangedSubviews: [pauseButton, stopButton])
-        buttonStack.axis = .horizontal
-        buttonStack.spacing = 20
-        buttonStack.distribution = .fillEqually
-        view.addSubview(buttonStack)
-        buttonStack.snp.makeConstraints {
-            $0.bottom.equalTo(donateCardView.snp.top).offset(-20)
-            $0.centerX.equalToSuperview()
-            $0.height.equalTo(52)
-            $0.width.equalTo(272)
-        }
+        controlsStackView.axis = .horizontal
+        controlsStackView.spacing = 16
+        controlsStackView.distribution = .fillEqually
+        controlsStackView.addArrangedSubview(pauseButton)
+        controlsStackView.addArrangedSubview(stopButton)
         
         pauseButton.setTitle("Pause", for: .normal)
         pauseButton.setImage(Asset.Assets.icPlay.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -206,26 +205,34 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
             $0.tintColor = .color7D5A4F
             $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: -3, bottom: 0, right: 3)
             $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 3, bottom: 0, right: -3)
-            $0.backgroundColor = UIColor.white.withAlphaComponent(0.72)
+            $0.backgroundColor = UIColor.white.withAlphaComponent(0.88)
             $0.rounded(radius: 14, borderWidth: 1, borderColor: .color7D5A4F)
         }
                 
         audioView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.width.equalToSuperview().inset(28)
-            make.height.equalTo(98)
-            make.bottom.equalTo(buttonStack.snp.top).offset(-20)
+            make.top.equalTo(timerCardView.snp.bottom).offset(18)
+            make.left.right.equalToSuperview().inset(24)
+            make.height.equalTo(110)
         }
 
-        donateCardView.backgroundColor = UIColor.white.withAlphaComponent(0.64)
+        controlsStackView.snp.makeConstraints {
+            $0.top.equalTo(audioView.snp.bottom).offset(16)
+            $0.left.right.equalToSuperview().inset(48)
+            $0.height.equalTo(54)
+        }
+
+        donateCardView.backgroundColor = UIColor.white.withAlphaComponent(0.34)
         donateCardView.layer.cornerRadius = 22
         donateCardView.layer.borderWidth = 1
-        donateCardView.layer.borderColor = UIColor(hexString: "E5D8C4").cgColor
+        donateCardView.layer.borderColor = UIColor(hexString: "E5D8C4").withAlphaComponent(0.72).cgColor
         donateCardView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(28)
+            make.top.equalTo(controlsStackView.snp.bottom).offset(28)
+            make.left.right.equalToSuperview().inset(24)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(14)
         }
         
+        donateButton.contentHorizontalAlignment = .center
+        donateButton.alpha = 0.88
         donateButton.snp.makeConstraints { make in
             make.height.equalTo(36)
             make.top.equalToSuperview().offset(14)
@@ -233,7 +240,7 @@ final class MeditationTimerViewController: UIViewController, MeditationTimerView
         }
       
         donateLabel.snp.makeConstraints { make in
-            make.top.equalTo(donateButton.snp.bottom).offset(8)
+            make.top.equalTo(donateButton.snp.bottom).offset(6)
             make.left.right.equalToSuperview().inset(18)
             make.bottom.equalToSuperview().inset(14)
         }

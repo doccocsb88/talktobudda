@@ -35,16 +35,20 @@ final class ScriptureCell: UITableViewCell {
         selectionStyle = .none
         contentView.backgroundColor = .clear
         backgroundColor = .clear
-        holderView.backgroundColor = UIColor(hexString: "FEEABE")
-        holderView.rounded(radius: 18)
+        holderView.backgroundColor = UIColor(hexString: "FDE8A8")
+        holderView.rounded(radius: 22)
         holderView.layer.borderWidth = 1
         holderView.layer.borderColor = UIColor(hexString: "EBCF8E").cgColor
+        holderView.layer.shadowColor = UIColor(hexString: "#D7B671").cgColor
+        holderView.layer.shadowOpacity = 0.08
+        holderView.layer.shadowOffset = CGSize(width: 0, height: 8)
+        holderView.layer.shadowRadius = 14
         
-        titleLabel.font = FontFamily.FiraMono.bold.font(size: 15)
+        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 17)
         titleLabel.textColor = UIColor(hexString: "6D4321")
         titleLabel.numberOfLines = 2
 
-        descriptionLabel.font = FontFamily.FiraMono.regular.font(size: 12)
+        descriptionLabel.font = FontFamily.Inter28pt.regular.font(size: 13)
         descriptionLabel.textColor = UIColor(hexString: "7A5A38")
         descriptionLabel.numberOfLines = 2
         
@@ -59,42 +63,56 @@ final class ScriptureCell: UITableViewCell {
         [thumbImageView, titleLabel, descriptionLabel, arrowIcon].forEach({holderView.addSubview($0)})
 
         thumbImageView.snp.makeConstraints { make in
-            make.top.left.equalToSuperview().offset(16)
-            make.width.height.equalTo(64)
+            make.top.left.equalToSuperview().offset(14)
+            make.width.height.equalTo(56)
         }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalTo(thumbImageView.snp.trailing).offset(16)
-            $0.trailing.equalTo(arrowIcon.snp.leading).offset(-12)
+            $0.top.equalToSuperview().offset(14)
+            $0.leading.equalTo(thumbImageView.snp.trailing).offset(14)
+            $0.trailing.equalTo(arrowIcon.snp.leading).offset(-10)
         }
 
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(10)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(6)
             $0.leading.equalTo(titleLabel)
-            $0.right.equalTo(arrowIcon.snp.left).offset(-12)
-            $0.bottom.lessThanOrEqualToSuperview().inset(16)
+            $0.right.equalTo(arrowIcon.snp.left).offset(-10)
+            $0.bottom.lessThanOrEqualToSuperview().inset(14)
         }
 
         arrowIcon.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(16)
-            $0.width.height.equalTo(18)
+            $0.trailing.equalToSuperview().inset(14)
+            $0.width.height.equalTo(16)
         }
     }
 
     func configure(with entity: ScriptureEntity) {
         titleLabel.text = entity.title
         descriptionLabel.text = condensedDescription(from: entity.description)
+        thumbImageView.image = image(for: entity.resourceTag)
+    }
+
+    private func image(for resourceTag: ResourceTag) -> UIImage {
+        switch resourceTag {
+        case .middleDiscourses, .longDiscourses:
+            return Asset.Assets.icScriptureTree.image
+        case .numberedDiscourses, .linkedDiscourses:
+            return Asset.Assets.icScriptureLotus.image
+        case .abhidhammaPitaka, .minorCollection:
+            return Asset.Assets.icScriptureBudda.image
+        case .vinayaPitaka:
+            return Asset.Assets.icScriptureVinaya.image
+        }
     }
 
     private func condensedDescription(from description: String) -> String {
         let compact = description.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines)
-        if compact.count <= 120 {
+        if compact.count <= 92 {
             return compact
         }
 
-        let index = compact.index(compact.startIndex, offsetBy: 117)
+        let index = compact.index(compact.startIndex, offsetBy: 89)
         return String(compact[..<index]).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
     }
 }

@@ -17,6 +17,11 @@ class QuotesListViewController: UIViewController {
     
     private var quotes: [BuddhaQuote] = []
     private let tableView = UITableView(frame: .zero, style: .grouped)
+    private let heroCardView = UIView()
+    private let heroEyebrowLabel = UILabel()
+    private let heroTitleLabel = UILabel()
+    private let heroBodyLabel = UILabel()
+    private let heroSourceLabel = UILabel()
     
     private lazy var navView: UIView = {
         let view = UIView()
@@ -34,9 +39,9 @@ class QuotesListViewController: UIViewController {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Buddha Quotes"
-        label.font = FontFamily.PlayfairDisplay.bold.font(size: 24)
-        label.textAlignment = .center
+        label.text = "Daily wisdom"
+        label.font = FontFamily.PlayfairDisplay.bold.font(size: 30)
+        label.textAlignment = .left
         label.textColor = .color4B3621
         return label
     }()
@@ -58,6 +63,10 @@ class QuotesListViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor(hexString: "#E4B169")
         button.layer.cornerRadius = 12
+        button.layer.shadowColor = UIColor(hexString: "#D8B17A").cgColor
+        button.layer.shadowOpacity = 0.24
+        button.layer.shadowOffset = CGSize(width: 0, height: 10)
+        button.layer.shadowRadius = 16
         button.titleLabel?.font = FontFamily.PlayfairDisplay.bold.font(size: 18)
         button.addTarget(self, action: #selector(startChatButtonTapped), for: .touchUpInside)
         return button
@@ -80,12 +89,35 @@ class QuotesListViewController: UIViewController {
         
         // Add subviews
         view.addSubview(navView)
+        view.addSubview(heroCardView)
         view.addSubview(tableView)
         view.addSubview(startChatButton)
         
         navView.addSubview(settingsButton)
         navView.addSubview(titleLabel)
         navView.addSubview(premiumButton)
+        [heroEyebrowLabel, heroTitleLabel, heroBodyLabel, heroSourceLabel].forEach(heroCardView.addSubview)
+
+        heroCardView.backgroundColor = UIColor.white.withAlphaComponent(0.58)
+        heroCardView.layer.cornerRadius = 24
+        heroCardView.layer.borderWidth = 1
+        heroCardView.layer.borderColor = UIColor.white.withAlphaComponent(0.5).cgColor
+
+        heroEyebrowLabel.text = "quote of the day"
+        heroEyebrowLabel.font = FontFamily.FiraMono.medium.font(size: 11)
+        heroEyebrowLabel.textColor = UIColor(hexString: "#8F715C")
+
+        heroTitleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 21)
+        heroTitleLabel.textColor = .color4B3621
+        heroTitleLabel.numberOfLines = 0
+
+        heroBodyLabel.font = FontFamily.Inter28pt.medium.font(size: 14)
+        heroBodyLabel.textColor = UIColor(hexString: "#6E6257")
+        heroBodyLabel.numberOfLines = 0
+
+        heroSourceLabel.font = FontFamily.FiraMono.medium.font(size: 12)
+        heroSourceLabel.textColor = UIColor(hexString: "#90745F")
+        heroSourceLabel.textAlignment = .right
         
         // Setup constraints
         navView.snp.makeConstraints { make in
@@ -101,9 +133,35 @@ class QuotesListViewController: UIViewController {
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.left.equalTo(settingsButton.snp.right).offset(6)
+            make.centerY.equalToSuperview()
         }
         
+        heroCardView.snp.makeConstraints { make in
+            make.top.equalTo(navView.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(16)
+        }
+
+        heroEyebrowLabel.snp.makeConstraints { make in
+            make.top.left.right.equalToSuperview().inset(18)
+        }
+
+        heroTitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(heroEyebrowLabel.snp.bottom).offset(8)
+            make.left.right.equalToSuperview().inset(18)
+        }
+
+        heroBodyLabel.snp.makeConstraints { make in
+            make.top.equalTo(heroTitleLabel.snp.bottom).offset(8)
+            make.left.right.equalToSuperview().inset(18)
+        }
+
+        heroSourceLabel.snp.makeConstraints { make in
+            make.top.equalTo(heroBodyLabel.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(18)
+            make.bottom.equalToSuperview().inset(18)
+        }
+
         premiumButton.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(16)
             make.width.equalTo(80)
@@ -112,15 +170,15 @@ class QuotesListViewController: UIViewController {
         }
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(navView.snp.bottom)
+            make.top.equalTo(heroCardView.snp.bottom).offset(10)
             make.left.right.equalToSuperview()
-            make.bottom.equalTo(startChatButton.snp.top).offset(-16)
+            make.bottom.equalTo(startChatButton.snp.top).offset(-12)
         }
         
         startChatButton.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(20)
-            make.height.equalTo(50)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.height.equalTo(56)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-16)
         }
         
         // Setup table view
@@ -129,6 +187,9 @@ class QuotesListViewController: UIViewController {
         tableView.delegate = self
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
+        tableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 12, right: 0)
+        tableView.sectionHeaderHeight = .leastNormalMagnitude
+        tableView.sectionFooterHeight = .leastNormalMagnitude
     }
     
     private func loadQuotes() {
@@ -140,7 +201,19 @@ class QuotesListViewController: UIViewController {
         }
         
         self.quotes = quotes
+        updateHeroQuote()
         tableView.reloadData()
+    }
+
+    private func updateHeroQuote() {
+        guard !quotes.isEmpty else { return }
+
+        let dayOfYear = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 1
+        let quote = quotes[(dayOfYear - 1) % quotes.count]
+
+        heroTitleLabel.text = "\"\(quote.quote)\""
+        heroBodyLabel.text = "A line to return to today before you open a conversation."
+        heroSourceLabel.text = "- \(quote.source)"
     }
     
     private func updatePremiumButtonVisibility() {
@@ -194,18 +267,20 @@ class QuoteTableViewCell: UITableViewCell {
     
     private let containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 12
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.1
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.92)
+        view.layer.cornerRadius = 16
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor(hexString: "#EEE1D0").cgColor
+        view.layer.shadowColor = UIColor(hexString: "#DDC8A9").cgColor
+        view.layer.shadowOpacity = 0.14
+        view.layer.shadowOffset = CGSize(width: 0, height: 8)
+        view.layer.shadowRadius = 14
         return view
     }()
     
     private let quoteLabel: UILabel = {
         let label = UILabel()
-        label.font = FontFamily.PlayfairDisplay.regular.font(size: 16)
+        label.font = FontFamily.PlayfairDisplay.regular.font(size: 17)
         label.textColor = .color4B3621
         label.numberOfLines = 0
         label.textAlignment = .left
@@ -214,8 +289,8 @@ class QuoteTableViewCell: UITableViewCell {
     
     private let sourceLabel: UILabel = {
         let label = UILabel()
-        label.font = FontFamily.PlayfairDisplay.italic.font(size: 14)
-        label.textColor = .systemGray
+        label.font = FontFamily.FiraMono.medium.font(size: 12)
+        label.textColor = UIColor(hexString: "#90745F")
         label.textAlignment = .right
         return label
     }()

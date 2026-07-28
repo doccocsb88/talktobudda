@@ -98,8 +98,8 @@ class ListSoundView: UIViewController {
         
         saveButton.isEnabled = false
         saveButton.setTitle("Save", for: .normal)
-        saveButton.setTitleColor(.color4B3621, for: .normal)
-        saveButton.setTitleColor(.lightGray, for: .disabled)
+        saveButton.setTitleColor(UIColor(hexString: "#B8A28C"), for: .normal)
+        saveButton.setTitleColor(UIColor(hexString: "#CDBFB1"), for: .disabled)
 
         saveButton.titleLabel?.font = FontFamily.PlayfairDisplay.medium.font(size: 16)
         saveButton.addTarget(self, action: #selector(tappedSaveButton), for: .touchUpInside)
@@ -165,10 +165,11 @@ extension ListSoundView: UITableViewDelegate, UITableViewDataSource {
         }
         var playing: Bool = false
         let sound = soundOptions[indexPath.row]
+        let isSelected = sound.name == selectedSound?.name
         if sound.name == selectedSound?.name, state == .playing {
             playing = true
         }
-        cell.updateContentView(sound, playing: playing)
+        cell.updateContentView(sound, playing: playing, selected: isSelected)
         cell.playPauseHandler = {[weak self] in
             if sound == self?.selectedSound {
                 self?.soundPlayer.togglePlayPause()
@@ -188,6 +189,14 @@ extension ListSoundView: UITableViewDelegate, UITableViewDataSource {
 //        PreferenceService.shared.meditationSound = selectedSound
         soundPlayer.playMeditationSound(sound: selectedSound)
         saveButton.isEnabled = true
+        updateSaveButtonAppearance()
+    }
+
+    private func updateSaveButtonAppearance() {
+        saveButton.setTitleColor(
+            saveButton.isEnabled ? .color4B3621 : UIColor(hexString: "#B8A28C"),
+            for: .normal
+        )
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

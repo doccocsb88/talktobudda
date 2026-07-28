@@ -12,7 +12,7 @@ import SnapKit
 class MoodView: UIView {
     let imageView = UIImageView()
     let textLabel = UILabel()
-    
+    private let selectionRing = UIView()
     let button = UIButton()
     
     var onSelectMood: ((Mood)->())?
@@ -29,16 +29,29 @@ class MoodView: UIView {
     }
     
     func setupUIs() {
-        [imageView, textLabel, button].forEach{addSubview($0)}
+        [selectionRing, imageView, textLabel, button].forEach{addSubview($0)}
         imageView.contentMode = .scaleAspectFit
         textLabel.text = mood.text
         textLabel.font = FontFamily.PlayfairDisplay.regular.font(size: 12)
         textLabel.textColor = .color7D5A4F
+        textLabel.textAlignment = .center
         
         imageView.image = mood.icon
         
+        selectionRing.backgroundColor = UIColor(hexString: "#F7E9CE")
+        selectionRing.layer.borderWidth = 1.5
+        selectionRing.layer.borderColor = UIColor(hexString: "#D8B17A").cgColor
+        selectionRing.layer.cornerRadius = 34
+        selectionRing.alpha = 0
+
         button.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        
+        selectionRing.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(2)
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(68)
         }
         
         imageView.snp.makeConstraints{
@@ -52,6 +65,13 @@ class MoodView: UIView {
         }
         
         button.addTarget(self, action: #selector(tappedButton(_:)), for: .touchUpInside)
+    }
+    
+    func updateSelection(isSelected: Bool) {
+        selectionRing.alpha = isSelected ? 1 : 0
+        imageView.alpha = isSelected ? 1 : 0.8
+        textLabel.alpha = isSelected ? 1 : 0.72
+        textLabel.font = isSelected ? FontFamily.PlayfairDisplay.bold.font(size: 12) : FontFamily.PlayfairDisplay.regular.font(size: 12)
     }
     
     

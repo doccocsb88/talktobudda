@@ -21,6 +21,7 @@ final class ScriptureViewController: UIViewController, ScriptureViewable {
     private let tableView = UITableView()
     private let navView = UIView()
     private let titleLabel = UILabel()
+    private let subtitleLabel = UILabel()
     
     // Empty state view
     private let emptyView = UIView()
@@ -55,21 +56,31 @@ final class ScriptureViewController: UIViewController, ScriptureViewable {
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
         navView.addSubview(titleLabel)
+        navView.addSubview(subtitleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(2)
+        }
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(4)
+            make.leading.trailing.equalToSuperview().inset(24)
         }
         titleLabel.text = "Scriptures".capitalized
-        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 24)
+        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 28)
         titleLabel.textAlignment = .center
         titleLabel.textColor = UIColor(hexString: "#4B3621")
+        subtitleLabel.text = "Read slowly, search directly, return often."
+        subtitleLabel.font = FontFamily.Inter28pt.regular.font(size: 14)
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.textColor = UIColor(hexString: "#90755A")
 
         searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
         searchBar.backgroundColor = .clear
         if let searchField = searchBar.value(forKey: "searchField") as? UITextField {
             searchField.backgroundColor = .clear
-            searchField.backgroundColor = UIColor(hexString: "FEEABE")
-            searchField.rounded(radius: 22)
-            searchField.font = FontFamily.FiraMono.medium.font(size: 14)
+            searchField.backgroundColor = UIColor(hexString: "FDE9AF")
+            searchField.rounded(radius: 20)
+            searchField.font = FontFamily.Inter28pt.medium.font(size: 15)
             searchField.textColor = UIColor(hexString: "#6D4321")
             searchField.attributedPlaceholder = NSAttributedString(
                 string: "Search sutras or keywords...",
@@ -79,9 +90,9 @@ final class ScriptureViewController: UIViewController, ScriptureViewable {
         
         searchBar.delegate = self
         searchBar.snp.makeConstraints {
-            $0.top.equalTo(navView.snp.bottom).offset(8)
+            $0.top.equalTo(navView.snp.bottom).offset(14)
             $0.leading.trailing.equalToSuperview().inset(16)
-            $0.height.equalTo(54)
+            $0.height.equalTo(50)
         }
 
         tableView.dataSource = self
@@ -90,7 +101,7 @@ final class ScriptureViewController: UIViewController, ScriptureViewable {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 20, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 20, right: 0)
         
         // Add tap gesture to hide keyboard
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
@@ -98,7 +109,7 @@ final class ScriptureViewController: UIViewController, ScriptureViewable {
         tableView.addGestureRecognizer(tapGesture)
         
         tableView.snp.makeConstraints {
-            $0.top.equalTo(searchBar.snp.bottom).offset(8)
+            $0.top.equalTo(searchBar.snp.bottom).offset(10)
             $0.leading.trailing.bottom.equalToSuperview()
         }
         
@@ -241,7 +252,7 @@ final class ScriptureViewController: UIViewController, ScriptureViewable {
 
 extension ScriptureViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 146
+        return 132
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
