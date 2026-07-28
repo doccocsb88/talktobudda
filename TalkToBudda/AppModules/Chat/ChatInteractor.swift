@@ -18,7 +18,7 @@ class ChatInteractor: ChatInteractable {
 
     private var messages: [ChatMessage] = []
     private let oldConversation: ConversationCodable?
-    private let conversation: ConversationCodable
+    private var conversation: ConversationCodable
     private var selectedCharacter: CharacterType?
     required init(conversation: ConversationCodable? = nil) {
         self.oldConversation = conversation
@@ -27,6 +27,8 @@ class ChatInteractor: ChatInteractable {
     }
     
     func fetchInitialMessages() {
+        view?.updateCharacterSelection(conversation.selectedCharacter)
+
         if let _conversation = oldConversation {
             _conversation.messages.forEach { chat in
                 messages.append(chat)
@@ -52,7 +54,7 @@ class ChatInteractor: ChatInteractable {
         }
       
         if messages.isEmpty {
-            let chat = ChatMessage(text: "Welcome, dear seeker of peace. May your heart find clarity and your mind discover stillness as we journey together through the path of understanding.", sender: .bot)
+            let chat = ChatMessage(text: makeGreetingMessage(), sender: .bot)
             messages.append(chat)
         }
     
@@ -64,6 +66,10 @@ class ChatInteractor: ChatInteractable {
         let userMessage = ChatMessage(text: text, sender: .user)
         messages.append(userMessage)
         view?.appendMessage(userMessage)
+
+        if !PreferenceService.shared.hasStartedFirstCharacterChat {
+            PreferenceService.shared.hasStartedFirstCharacterChat = true
+        }
         
         
         let character = selectedCharacter ?? .buddha
@@ -95,17 +101,58 @@ class ChatInteractor: ChatInteractable {
     func updateSelectedCharacter(_ character: CharacterType) {
         selectedCharacter = character
         ChatDataManager.shared.updateConversationCharacter(conversationId: conversation.id, character: character)
+        ChatDataManager.shared.updateWisdomContext(conversationId: conversation.id, wisdomContext: nil)
         
         // Update the conversation object
-        var updatedConversation = conversation
-        updatedConversation.selectedCharacter = character
+        conversation.selectedCharacter = character
+        conversation.selectedWisdomSituationId = nil
+        conversation.selectedWisdomSituationTitle = nil
+        conversation.selectedWisdomMatchReason = nil
         
+        // Keep exactly one opening bot greeting for a fresh conversation.
+        if shouldReplaceOpeningGreeting {
+            messages[0] = ChatMessage(text: character.greetingMessage, sender: .bot)
+            view?.displayMessages(messages)
+            return
+        }
+
         // Show character-specific greeting if this is a new conversation
-        if messages.count <= 1 {
+        if messages.isEmpty {
             let greetingMessage = ChatMessage(text: character.greetingMessage, sender: .bot)
             messages.append(greetingMessage)
             ChatDataManager.shared.addMessage(chat: greetingMessage, to: conversation)
             view?.appendMessage(greetingMessage)
         }
+    }
+
+    func restartConversation(with character: CharacterType) {
+        selectedCharacter = character
+        conversation = ChatDataManager.shared.createConversation(title: "", character: character)
+        messages.removeAll()
+
+        let greetingMessage = ChatMessage(text: character.greetingMessage, sender: .bot)
+        messages.append(greetingMessage)
+        ChatDataManager.shared.addMessage(chat: greetingMessage, to: conversation)
+
+        view?.updateCharacterSelection(character)
+        view?.displayMessages(messages)
+    }
+
+    private func makeGreetingMessage() -> String {
+        if let situation = conversation.selectedWisdomSituationTitle,
+           let character = conversation.selectedCharacter {
+            return "\(character.greetingMessage)\n\nYou chose to reflect on: \(situation)"
+        }
+
+        if let character = selectedCharacter {
+            return character.greetingMessage
+        }
+
+        return "Welcome, dear seeker of peace. May your heart find clarity and your mind discover stillness as we journey together through the path of understanding."
+    }
+
+    private var shouldReplaceOpeningGreeting: Bool {
+        guard oldConversation == nil, messages.count == 1 else { return false }
+        return messages.first?.sender == .bot
     }
 }

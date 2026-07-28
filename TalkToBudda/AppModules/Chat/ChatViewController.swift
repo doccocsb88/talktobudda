@@ -12,76 +12,160 @@ import SnapKit
 
 class ChatViewController: UIViewController, ChatViewable {
     var presenter: ChatPresentable?
-    
+
     private var messages: [ChatMessage] = []
     private let tableView = UITableView()
     private let inputBar = InputBarView()
     private var selectedCharacter: CharacterType?
+    private lazy var selectedGuide = Character(type: .buddha)
     private lazy var navView: UIView = {
         let view = UIView()
-        
+
         return view
     }()
-    
+
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.isHidden = true
+        button.setImage(Asset.Assets.icBack.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.tintColor = .color4B3621
+        button.backgroundColor = UIColor(hexString: "#F7EFE5")
+        button.layer.cornerRadius = 22
+        button.addTarget(self, action: #selector(tappedBackButton(_:)), for: .touchUpInside)
+        return button
+    }()
+
     private lazy var characterButton: UIButton = {
         let button = UIButton()
         button.isHidden = true
         button.setTitle("Choose Guide", for: .normal)
         button.setTitleColor(.color4B3621, for: .normal)
-        button.titleLabel?.font = FontFamily.FiraMono.medium.font(size: 14)
-        button.backgroundColor = UIColor(hexString: "#F5F0E8")
-        button.layer.cornerRadius = 15
+        button.titleLabel?.font = FontFamily.Inter28pt.medium.font(size: 15)
+        button.backgroundColor = UIColor(hexString: "#F7ECDD")
+        button.layer.cornerRadius = 20
         button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor(hexString: "#D4C4B0").cgColor
+        button.layer.borderColor = UIColor(hexString: "#E9D7BD").cgColor
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 34)
+        button.semanticContentAttribute = .forceRightToLeft
+        let iconConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium)
+        button.setImage(UIImage(systemName: "chevron.down", withConfiguration: iconConfig), for: .normal)
+        button.tintColor = UIColor(hexString: "#9D7B54")
         button.addTarget(self, action: #selector(tappedCharacterButton(_:)), for: .touchUpInside)
         return button
     }()
-    
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Journey of Inner Peace"
-        label.font = FontFamily.PlayfairDisplay.bold.font(size: 24)
-        label.textAlignment = .center
-        label.textColor = UIColor(hexString: "#4B3621")
 
+    private lazy var subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Mindfulness guide"
+        label.font = FontFamily.Inter28pt.regular.font(size: 15)
+        label.textColor = UIColor(hexString: "#7A624B")
+        label.textAlignment = .center
+        label.numberOfLines = 1
         return label
     }()
-    
+
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Buddha"
+        label.font = FontFamily.PlayfairDisplay.bold.font(size: 30)
+        label.textAlignment = .center
+        label.textColor = UIColor(hexString: "#4B3621")
+        label.numberOfLines = 2
+        return label
+    }()
+
+    private lazy var handoffCardView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(hexString: "#FCF7F1")
+        view.layer.cornerRadius = 22
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor(hexString: "#EBDCCD").cgColor
+        return view
+    }()
+
+    private lazy var handoffAvatarView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = selectedGuide.avatarImage
+        imageView.contentMode = .scaleAspectFit
+        imageView.backgroundColor = UIColor(hexString: "#F4E8D8")
+        imageView.layer.cornerRadius = 20
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+
+    private lazy var handoffBadgeLabel: UILabel = {
+        let label = UILabel()
+        label.text = selectedGuide.bestForLabel
+        label.font = FontFamily.Inter28pt.medium.font(size: 11)
+        label.textColor = UIColor(hexString: "#8A6A4B")
+        label.backgroundColor = UIColor(hexString: "#F7F0E5")
+        label.textAlignment = .center
+        label.layer.cornerRadius = 9
+        label.clipsToBounds = true
+        return label
+    }()
+
+    private lazy var handoffTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "You are speaking with \(selectedGuide.name)"
+        label.font = FontFamily.PlayfairDisplay.bold.font(size: 20)
+        label.textColor = UIColor(hexString: "#4B3621")
+        label.numberOfLines = 0
+        return label
+    }()
+
+    private lazy var handoffBodyLabel: UILabel = {
+        let label = UILabel()
+        label.text = selectedGuide.handoffSummary
+        label.font = FontFamily.Inter28pt.regular.font(size: 14)
+        label.textColor = UIColor(hexString: "#755F4A")
+        label.numberOfLines = 2
+        return label
+    }()
+
     private var isLoading: Bool = false {
         didSet {
             inputBar.uploadLoadingState(isLoading)
         }
     }
-    
+
     private lazy var premiumPromptView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(hexString: "#FFF8E7")
-        view.layer.cornerRadius = 12
+        view.backgroundColor = UIColor(hexString: "#FBF6F0")
+        view.layer.cornerRadius = 22
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(hexString: "#E6D7B8").cgColor
+        view.layer.borderColor = UIColor(hexString: "#E9D8C5").cgColor
         view.isHidden = true
         return view
     }()
-    
+
+    private lazy var premiumIconView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "sparkles"))
+        imageView.tintColor = UIColor(hexString: "#D8A24F")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+
     private lazy var chatCountLabel: UILabel = {
         let label = UILabel()
-        label.font = FontFamily.FiraMono.medium.font(size: 14)
-        label.textColor = UIColor(hexString: "#8B6F47")
+        label.font = FontFamily.Inter28pt.medium.font(size: 16)
+        label.textColor = UIColor(hexString: "#6C5034")
         label.textAlignment = .left
         return label
     }()
-    
+
     private lazy var storeButton: UIButton = {
         let button = UIButton()
         button.setTitle("Get More", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = FontFamily.FiraMono.bold.font(size: 14)
-        button.backgroundColor = UIColor(hexString: "#D4A574")
-        button.layer.cornerRadius = 8
+        button.titleLabel?.font = FontFamily.Inter28pt.semiBold.font(size: 16)
+        button.backgroundColor = UIColor(hexString: "#D3A05D")
+        button.layer.cornerRadius = 18
         button.addTarget(self, action: #selector(tappedStoreButton(_:)), for: .touchUpInside)
         return button
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: false)
@@ -90,43 +174,55 @@ class ChatViewController: UIViewController, ChatViewable {
         updatePremiumPromptVisibility()
         presenter?.viewDidLoad()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updatePremiumPromptVisibility()
         updateChatCountLabel()
     }
-    
+
     deinit {
         removeKeyboardObservers()
     }
-    
+
     private func setupUI() {
         view.backgroundColor = .colorFDF6ED
         view.addSubview(navView)
+        view.addSubview(handoffCardView)
         view.addSubview(tableView)
         view.addSubview(premiumPromptView)
         view.addSubview(inputBar)
 
+        navView.addSubview(backButton)
         navView.addSubview(characterButton)
+        navView.addSubview(subtitleLabel)
         navView.addSubview(titleLabel)
-        
+        handoffCardView.addSubview(handoffAvatarView)
+        handoffCardView.addSubview(handoffBadgeLabel)
+        handoffCardView.addSubview(handoffTitleLabel)
+        handoffCardView.addSubview(handoffBodyLabel)
+
+        premiumPromptView.addSubview(premiumIconView)
         premiumPromptView.addSubview(chatCountLabel)
         premiumPromptView.addSubview(storeButton)
-        
+
         tableView.register(ChatMessageCell.self, forCellReuseIdentifier: "ChatMessageCell")
         tableView.register(BuddaChatMessageCell.self, forCellReuseIdentifier: "BuddaChatMessageCell")
         tableView.register(ChatLoadingTVC.self, forCellReuseIdentifier: "ChatLoadingTVC")
 
-        
+
         tableView.dataSource = self
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
+        tableView.showsVerticalScrollIndicator = false
+        tableView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 12, right: 0)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 120
 
         inputBar.onSend = { [weak self] text in
             self?.presenter?.userDidSendMessage(text)
         }
-        
+
         // Add tap gesture to dismiss keyboard only when tapping on tableView
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
@@ -134,51 +230,101 @@ class ChatViewController: UIViewController, ChatViewable {
 
         navView.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
-            make.height.equalTo(44)
+            make.height.equalTo(120)
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
         }
-        
+
+        handoffCardView.snp.makeConstraints { make in
+            make.top.equalTo(navView.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(24)
+        }
+
         tableView.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
-            make.top.equalTo(navView.snp.bottom)
+            make.top.equalTo(handoffCardView.snp.bottom).offset(10)
             make.bottom.equalTo(premiumPromptView.snp.top).offset(-8)
         }
-        
-        premiumPromptView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(12)
-            make.bottom.equalTo(inputBar.snp.top).offset(-8)
-            make.height.equalTo(44)
+
+        handoffAvatarView.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(16)
+            make.top.equalToSuperview().inset(16)
+            make.width.height.equalTo(40)
         }
-        
+
+        handoffBadgeLabel.snp.makeConstraints { make in
+            make.left.equalTo(handoffAvatarView.snp.right).offset(12)
+            make.top.equalToSuperview().inset(16)
+            make.height.equalTo(18)
+        }
+
+        handoffTitleLabel.snp.makeConstraints { make in
+            make.left.equalTo(handoffBadgeLabel)
+            make.top.equalTo(handoffBadgeLabel.snp.bottom).offset(6)
+            make.right.equalToSuperview().inset(16)
+        }
+
+        handoffBodyLabel.snp.makeConstraints { make in
+            make.left.equalTo(handoffTitleLabel)
+            make.top.equalTo(handoffTitleLabel.snp.bottom).offset(4)
+            make.right.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(14)
+        }
+
+        premiumPromptView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview().inset(24)
+            make.bottom.equalTo(inputBar.snp.top).offset(-14)
+            make.height.equalTo(64)
+        }
+
+        premiumIconView.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(16)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(20)
+        }
+
         chatCountLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(12)
+            make.left.equalTo(premiumIconView.snp.right).offset(10)
             make.centerY.equalToSuperview()
             make.right.equalTo(storeButton.snp.left).offset(-8)
         }
-        
+
         storeButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(12)
+            make.right.equalToSuperview().inset(10)
             make.centerY.equalToSuperview()
-            make.width.equalTo(80)
-            make.height.equalTo(32)
+            make.width.equalTo(94)
+            make.height.equalTo(40)
         }
 
         inputBar.snp.makeConstraints { make in
-            make.left.right.equalToSuperview().inset(12)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-8)
-            make.height.equalTo(50)
+            make.left.right.equalToSuperview().inset(24)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-10)
+            make.height.equalTo(56)
         }
-        
+
+        backButton.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(24)
+            make.width.height.equalTo(44)
+            make.top.equalToSuperview().offset(6)
+        }
+
         characterButton.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(8)
-            make.height.equalTo(30)
-            make.width.equalTo(100)
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(8)
+            make.height.equalTo(40)
         }
-        
+
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(characterButton.snp.bottom).offset(18)
+            make.leading.trailing.equalToSuperview().inset(24)
+        }
+
         titleLabel.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.top.equalTo(subtitleLabel.snp.bottom).offset(4)
+            make.leading.trailing.equalToSuperview().inset(24)
+            make.centerX.equalToSuperview()
         }
+
+        refreshGuideHandoff()
     }
 
     @objc private func didTapTag(_ sender: UIButton) {
@@ -205,33 +351,29 @@ class ChatViewController: UIViewController, ChatViewable {
     }
 
     func showNav() {
-       
-        let backButton = UIButton()
-        backButton.setImage(Asset.Assets.icBack.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        backButton.imageView?.contentMode = .scaleAspectFit
-        backButton.tintColor = .color4B3621
-        backButton.addTarget(self, action: #selector(tappedBackButton(_:)), for: .touchUpInside)
-        navView.addSubview(backButton)
-        backButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(8)
-            make.width.height.equalTo(44)
-            make.centerY.equalToSuperview()
-        }
+        backButton.isHidden = false
     }
-    
+
     func toogleLoading(_ loading: Bool) {
         isLoading = loading
     }
-    
+
     func updateCharacterSelection(_ character: CharacterType?) {
         if let character = character {
             selectedCharacter = character
+        }
+
+        if let character = selectedCharacter {
+            selectedGuide = Character(type: character)
+            characterButton.isHidden = false
             characterButton.setTitle(character.displayName, for: .normal)
-            titleLabel.text = "Conversation with \(character.displayName)"
+            titleLabel.text = character.displayName
+            subtitleLabel.text = selectedGuide.chatSubtitle
+            refreshGuideHandoff()
         }
     }
 
-    
+
     private func scrollToBottom() {
         guard messages.count > 0 else { return }
         if isLoading {
@@ -243,47 +385,47 @@ class ChatViewController: UIViewController, ChatViewable {
             tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
     }
-    
-    
+
+
     @objc func tappedBackButton(_ sender: UIButton) {
         dismiss(animated: true)
     }
-    
+
     @objc func tappedCharacterButton(_ sender: UIButton) {
         let characterSelectionVC = CharacterSelectionViewController()
         characterSelectionVC.delegate = self
         characterSelectionVC.modalPresentationStyle = .fullScreen
         present(characterSelectionVC, animated: true)
     }
-    
+
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
-    
+
     @objc private func tappedStoreButton(_ sender: UIButton) {
         DSRouter.showDS(from: self) { [weak self] in
             // Update UI after store interaction
             self?.updatePremiumPromptVisibility()
         }
     }
-    
+
     private func updatePremiumPromptVisibility() {
         let isPremium = StoreKitManager.shared.isPremium
         premiumPromptView.isHidden = isPremium
-        
+
         if !isPremium {
             updateChatCountLabel()
         }
     }
-    
+
     private func updateChatCountLabel() {
         let currentChatCount = ConditionServices.shared.chatCount
         let totalChat = ConditionServices.shared.totalChatFree
         let remainingCount = max(0, totalChat - currentChatCount)
-        
+
         chatCountLabel.text = "\(remainingCount) chats remaining"
     }
-    
+
     // MARK: - Keyboard Handling
     private func setupKeyboardObservers() {
         NotificationCenter.default.addObserver(
@@ -292,7 +434,7 @@ class ChatViewController: UIViewController, ChatViewable {
             name: UIResponder.keyboardWillShowNotification,
             object: nil
         )
-        
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillHide(_:)),
@@ -300,21 +442,21 @@ class ChatViewController: UIViewController, ChatViewable {
             object: nil
         )
     }
-    
+
     private func removeKeyboardObservers() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
+
     @objc private func keyboardWillShow(_ notification: Notification) {
         guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
               let animationDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else {
             return
         }
-        
+
         let keyboardHeight = keyboardFrame.height
         let safeAreaBottom = view.safeAreaInsets.bottom
-        
+
         UIView.animate(withDuration: animationDuration) {
             self.inputBar.snp.updateConstraints { make in
                 make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-keyboardHeight + safeAreaBottom - 8)
@@ -324,18 +466,18 @@ class ChatViewController: UIViewController, ChatViewable {
             }
             self.view.layoutIfNeeded()
         }
-        
+
         // Scroll to bottom to show the latest message
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.scrollToBottom()
         }
     }
-    
+
     @objc private func keyboardWillHide(_ notification: Notification) {
         guard let animationDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else {
             return
         }
-        
+
         UIView.animate(withDuration: animationDuration) {
             self.inputBar.snp.updateConstraints { make in
                 make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-8)
@@ -358,7 +500,7 @@ extension ChatViewController: UITableViewDataSource {
         } else if section == 1 {
             return isLoading ? 1 : 0
         }
-        
+
         return 0
     }
 
@@ -369,13 +511,13 @@ extension ChatViewController: UITableViewDataSource {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: "BuddaChatMessageCell", for: indexPath) as? BuddaChatMessageCell else {
                     return UITableViewCell()
                 }
-                cell.configure(message: msg.text, isFromUser: msg.sender == .user)
+                cell.configure(message: msg, character: selectedCharacter)
                 return cell
             } else {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: "ChatMessageCell", for: indexPath) as? ChatMessageCell else {
                     return UITableViewCell()
                 }
-                cell.configure(message: msg.text, isFromUser: msg.sender == .user)
+                cell.configure(message: msg, isFromUser: msg.sender == .user)
                 return cell
             }
         } else if indexPath.section == 1 {
@@ -388,18 +530,20 @@ extension ChatViewController: UITableViewDataSource {
             return UITableViewCell()
         }
     }
-    
+
 }
 
 extension ChatViewController: CharacterSelectionDelegate {
     func didSelectCharacter(_ character: CharacterType) {
-        selectedCharacter = character
-        characterButton.setTitle(character.displayName, for: .normal)
-        titleLabel.text = "Conversation with \(character.displayName)"
-        
-        // Update conversation with selected character
-        if let presenter = presenter as? ChatPresenter {
-            presenter.updateSelectedCharacter(character)
-        }
+        presenter?.restartConversation(with: character)
+
+        presentedViewController?.dismiss(animated: true)
+    }
+
+    private func refreshGuideHandoff() {
+        handoffAvatarView.image = selectedGuide.avatarImage
+        handoffBadgeLabel.text = selectedGuide.bestForLabel
+        handoffTitleLabel.text = "You are speaking with \(selectedGuide.name)"
+        handoffBodyLabel.text = selectedGuide.handoffSummary
     }
 }

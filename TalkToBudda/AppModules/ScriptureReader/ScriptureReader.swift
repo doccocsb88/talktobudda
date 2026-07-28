@@ -50,27 +50,20 @@ class ScriptureReaderVC: UIViewController {
         super.viewDidLoad()
         
         setupPDFView()
-        
-        // Tải tài nguyên trước
         SVProgressHUD.show(withStatus: "Loading...")
-        
-        ResourceTagManager.shared.downloadResource(for: scripture.resourceTag) {[weak self] success in
+        ResourceTagManager.shared.downloadResource(for: scripture.resourceTag) { [weak self] success in
             guard let self else { return }
             SVProgressHUD.dismiss()
-            
-            if success {
-                // Nếu đã tải xong, load các file
-                // Lấy URL từ ResourceTagManager
-                if let url = ResourceTagManager.shared.urlForResource(fileName: self.scripture.name, in: self.scripture.resourceTag) {
-                    self.pdfUrl = url
-                    DispatchQueue.main.async {
-                        self.loadPDF()
-                    }
-                } else {
-                    self.showResourceLoadError()
-                }
-            } else {
+
+            guard success,
+                  let url = ResourceTagManager.shared.urlForResource(fileName: self.scripture.name, in: self.scripture.resourceTag) else {
                 self.showResourceLoadError()
+                return
+            }
+
+            self.pdfUrl = url
+            DispatchQueue.main.async {
+                self.loadPDF()
             }
         }
     }

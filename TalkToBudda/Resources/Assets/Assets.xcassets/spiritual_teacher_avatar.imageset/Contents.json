@@ -1,0 +1,13 @@
+{
+  "images" : [
+    {
+      "filename" : "spiritual_teacher.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

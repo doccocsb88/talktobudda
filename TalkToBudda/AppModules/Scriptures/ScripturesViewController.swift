@@ -68,15 +68,20 @@ final class ScriptureViewController: UIViewController, ScriptureViewable {
         if let searchField = searchBar.value(forKey: "searchField") as? UITextField {
             searchField.backgroundColor = .clear
             searchField.backgroundColor = UIColor(hexString: "FEEABE")
-            searchField.rounded(radius: 18)
+            searchField.rounded(radius: 22)
+            searchField.font = FontFamily.FiraMono.medium.font(size: 14)
+            searchField.textColor = UIColor(hexString: "#6D4321")
+            searchField.attributedPlaceholder = NSAttributedString(
+                string: "Search sutras or keywords...",
+                attributes: [.foregroundColor: UIColor(hexString: "#9A7B57")]
+            )
         }
         
         searchBar.delegate = self
-        searchBar.placeholder = "Search sutras or keywords..."
         searchBar.snp.makeConstraints {
             $0.top.equalTo(navView.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(16)
-            $0.height.equalTo(60)
+            $0.height.equalTo(54)
         }
 
         tableView.dataSource = self
@@ -84,6 +89,8 @@ final class ScriptureViewController: UIViewController, ScriptureViewable {
         tableView.register(ScriptureCell.self, forCellReuseIdentifier: "ScriptureCell")
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
+        tableView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 20, right: 0)
         
         // Add tap gesture to hide keyboard
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
@@ -234,7 +241,7 @@ final class ScriptureViewController: UIViewController, ScriptureViewable {
 
 extension ScriptureViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 146
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

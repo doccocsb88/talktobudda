@@ -22,6 +22,7 @@ protocol ChatInteractable: AnyObject {
     func fetchInitialMessages()
     func sendMessage(_ text: String)
     func updateSelectedCharacter(_ character: CharacterType)
+    func restartConversation(with character: CharacterType)
 }
 
 protocol ChatPresentable: AnyObject {
@@ -29,6 +30,7 @@ protocol ChatPresentable: AnyObject {
     func userDidSendMessage(_ text: String)
     func userReceivedAnswer(chat: ChatMessage)
     func updateSelectedCharacter(_ character: CharacterType)
+    func restartConversation(with character: CharacterType)
 }
 
 protocol ChatRoutable: AnyObject {

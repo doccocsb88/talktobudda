@@ -16,8 +16,8 @@ protocol MeditationMoodPresentable: AnyObject {
     func didSelectMood(_ mood: Mood)
     func didTapStartMeditation()
     func getMediation(at indexPath: IndexPath) -> MeditationCodable?
-    
 }
+
 
 final class MeditationMoodPresenter: MeditationMoodPresentable {
     weak var view: MeditationMoodViewable?

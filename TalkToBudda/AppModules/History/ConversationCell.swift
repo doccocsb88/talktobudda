@@ -129,7 +129,7 @@ class ConversationCell: UITableViewCell {
         
         // Display character information
         let character = conversation.selectedCharacter ?? .buddha
-        characterImageView.image = UIImage(named: character.avatarImageName)
+        characterImageView.image = character.avatarImage
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short

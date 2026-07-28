@@ -11,7 +11,7 @@ class PreferenceService {
     enum Keys {
         static let isShowedOnboarding = "is_showed_onboarding"
         static let mediationBackgroundSound = "meditation_background_sound"
-
+        static let hasStartedFirstCharacterChat = "has_started_first_character_chat"
     }
     
     var isShowedOnboarding: Bool {
@@ -41,6 +41,18 @@ class PreferenceService {
             userDefault.set(data, forKey: Keys.mediationBackgroundSound)
         }
     }
+
+    var hasStartedFirstCharacterChat: Bool {
+        get {
+            userDefault.bool(forKey: Keys.hasStartedFirstCharacterChat)
+        }
+
+        set {
+            userDefault.set(newValue, forKey: Keys.hasStartedFirstCharacterChat)
+            userDefault.synchronize()
+        }
+    }
+
     private let userDefault = UserDefaults.standard
     static let shared = PreferenceService()
 }

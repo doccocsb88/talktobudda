@@ -13,50 +13,40 @@ class ChatLoadingTVC: BuddaChatMessageCell {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         
-        buddaImageView.backgroundColor = UIColor(hexString: "E5D2AF")
-        buddaImageView.rounded(radius: 25)
+        buddaImageView.backgroundColor = UIColor(hexString: "#F5E7D1")
+        buddaImageView.rounded(radius: 28)
         buddaImageView.contentMode = .scaleAspectFit
         selectionStyle = .none
         contentView.addSubview(buddaImageView)
         contentView.addSubview(bubbleView)
         
         buddaImageView.snp.makeConstraints { make in
-            make.top.left.equalToSuperview().inset(12)
-            make.width.height.equalTo(50)
+            make.top.left.equalToSuperview().inset(8)
+            make.width.height.equalTo(56)
         }
-        bubbleView.layer.cornerRadius = 12
+        bubbleView.layer.cornerRadius = 22
         bubbleView.clipsToBounds = true
-        bubbleView.backgroundColor = UIColor(hexString: "EDD5AB")
+        bubbleView.backgroundColor = UIColor(hexString: "#FAEFD8")
         
         messageLabel.numberOfLines = 0
-        messageLabel.font = FontFamily.PlayfairDisplay.regular.font(size: 14)
+        messageLabel.font = FontFamily.Inter28pt.regular.font(size: 18)
         messageLabel.textColor = .color4B3621
         bubbleView.addSubview(messageLabel)
+        timeLabel.isHidden = true
         
         bubbleView.snp.makeConstraints { make in
-            make.top.right.bottom.equalToSuperview().inset(12)
-            make.left.equalTo(buddaImageView.snp.right).offset(12)
+            make.top.bottom.equalToSuperview().inset(8)
+            make.left.equalTo(buddaImageView.snp.right).offset(14)
+            make.right.lessThanOrEqualToSuperview().offset(-20)
         }
         
         messageLabel.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(12)
+            make.edges.equalToSuperview().inset(18)
         }
     }
     
-    override func configure(message: String, isFromUser: Bool) {
+    func configure(message: String, isFromUser: Bool) {
         messageLabel.text = message
         messageLabel.textAlignment = .left
-        
-        let font = FontFamily.PlayfairDisplay.regular.font(size: 14)
-        let width = message.size(usingFont: font).width
-        let maxWidth = UIScreen.main.bounds.width - 24 * 2 - 50
-        var padding: CGFloat = 12
-        if width < maxWidth {
-            padding =  maxWidth - width
-        }
-        
-        bubbleView.snp.updateConstraints { make in
-            make.right.equalToSuperview().inset(isFromUser ? 12 : padding)
-        }
     }
 }

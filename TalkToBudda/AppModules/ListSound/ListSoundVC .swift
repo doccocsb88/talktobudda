@@ -23,6 +23,7 @@ class ListSoundView: UIViewController {
     private lazy var navView = UIView()
     private let backButton = UIButton()
     private let saveButton = UIButton()
+    private let helperLabel = UILabel()
 
     let soundPlayer = MeditationAudioPlayer()
     private var selectedSound: SoundCodable?
@@ -71,11 +72,12 @@ class ListSoundView: UIViewController {
         view.addSubview(navView)
         // Tiêu đề
         titleLabel.text = "Choose Background Sound"
-        titleLabel.font = FontFamily.PlayfairDisplay.medium.font(size: 16)
-        titleLabel.textColor = .black
+        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 18)
+        titleLabel.textColor = .color4B3621
         navView.addSubview(titleLabel)
         navView.addSubview(backButton)
         navView.addSubview(saveButton)
+        view.addSubview(helperLabel)
 
         titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
@@ -101,6 +103,13 @@ class ListSoundView: UIViewController {
 
         saveButton.titleLabel?.font = FontFamily.PlayfairDisplay.medium.font(size: 16)
         saveButton.addTarget(self, action: #selector(tappedSaveButton), for: .touchUpInside)
+
+        helperLabel.text = "Preview a sound, then save it for your meditation session."
+        helperLabel.textColor = UIColor(hexString: "#8E6B45")
+        helperLabel.font = FontFamily.PlayfairDisplay.regular.font(size: 14)
+        helperLabel.numberOfLines = 2
+        helperLabel.textAlignment = .left
+
         backButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(8)
@@ -118,11 +127,17 @@ class ListSoundView: UIViewController {
         tableView.dataSource = self
         tableView.register(ListSoundTVC.self, forCellReuseIdentifier: "ListSoundTVC")
         tableView.backgroundColor = .clear
-        tableView.separatorStyle = .singleLine
+        tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         view.addSubview(tableView)
 
+        helperLabel.snp.makeConstraints { make in
+            make.top.equalTo(navView.snp.bottom).offset(18)
+            make.leading.trailing.equalToSuperview().inset(20)
+        }
+
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(navView.snp.bottom).offset(20)
+            make.top.equalTo(helperLabel.snp.bottom).offset(14)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
@@ -176,6 +191,6 @@ extension ListSoundView: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        return 88
     }
 }

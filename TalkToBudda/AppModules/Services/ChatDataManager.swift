@@ -69,11 +69,14 @@ class ChatDataManager {
         return results.map { ConversationCodable(from: $0) }
     }
     
-    func createConversation(title: String, character: CharacterType? = nil) -> ConversationCodable {
+    func createConversation(title: String, character: CharacterType? = nil, wisdomContext: WisdomContext? = nil) -> ConversationCodable {
         let conversation = ConversationObject()
         conversation.title = title
         conversation.createdAt = Date()
         conversation.selectedCharacter = character
+        conversation.selectedWisdomSituationId = wisdomContext?.situationId
+        conversation.selectedWisdomSituationTitle = wisdomContext?.situationTitle
+        conversation.selectedWisdomMatchReason = wisdomContext?.matchReason
 
         safeWrite { realm in
             realm.add(conversation)
@@ -109,6 +112,17 @@ class ChatDataManager {
 
         safeWrite { realm in
             conversation.selectedCharacter = character
+        }
+    }
+
+    func updateWisdomContext(conversationId: String, wisdomContext: WisdomContext?) {
+        let realm = try! Realm()
+        guard let conversation = realm.object(ofType: ConversationObject.self, forPrimaryKey: conversationId) else { return }
+
+        safeWrite { realm in
+            conversation.selectedWisdomSituationId = wisdomContext?.situationId
+            conversation.selectedWisdomSituationTitle = wisdomContext?.situationTitle
+            conversation.selectedWisdomMatchReason = wisdomContext?.matchReason
         }
     }
     

@@ -14,6 +14,9 @@ struct ConversationCodable: Codable {
     let createdAt: Date
     var messages: [ChatMessage]
     var selectedCharacter: CharacterType?
+    var selectedWisdomSituationId: String?
+    var selectedWisdomSituationTitle: String?
+    var selectedWisdomMatchReason: String?
     
     mutating func generate() {
         messages.removeAll()
@@ -54,6 +57,9 @@ extension ConversationCodable {
             ChatMessage(id: $0.id, text: $0.text, sender: $0.sender, createdAt: $0.createdAt)
         }
         self.selectedCharacter = object.selectedCharacter
+        self.selectedWisdomSituationId = object.selectedWisdomSituationId
+        self.selectedWisdomSituationTitle = object.selectedWisdomSituationTitle
+        self.selectedWisdomMatchReason = object.selectedWisdomMatchReason
     }
 }
 
@@ -63,6 +69,9 @@ class ConversationObject: Object {
     @Persisted var title: String = "" // Ví dụ: "Cuộc hội thoại với ChatBot"
     @Persisted var createdAt: Date = Date()
     @Persisted var selectedCharacter: CharacterType?
+    @Persisted var selectedWisdomSituationId: String?
+    @Persisted var selectedWisdomSituationTitle: String?
+    @Persisted var selectedWisdomMatchReason: String?
 
     // Danh sách các tin nhắn thuộc đoạn hội thoại
     @Persisted var messages: List<ChatMessageObject>

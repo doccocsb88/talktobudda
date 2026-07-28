@@ -32,4 +32,9 @@ class ChatPresenter: ChatPresentable {
         selectedCharacter = character
         interactor?.updateSelectedCharacter(character)
     }
+
+    func restartConversation(with character: CharacterType) {
+        selectedCharacter = character
+        interactor?.restartConversation(with: character)
+    }
 }

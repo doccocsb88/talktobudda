@@ -8,6 +8,7 @@
 import UIKit
 
 final class MeditationAudioControlBar: UIView {
+    private let contentCard = UIView()
 
     let titleLabel: UIButton = {
         let label = UIButton()
@@ -54,24 +55,33 @@ final class MeditationAudioControlBar: UIView {
 
     
     private func setupUI() {
-        addSubview(titleLabel)
-        addSubview(volumeSlider)
-        addSubview(muteButton)
+        contentCard.backgroundColor = UIColor.white.withAlphaComponent(0.28)
+        contentCard.layer.cornerRadius = 20
+        contentCard.layer.borderWidth = 1
+        contentCard.layer.borderColor = UIColor(hexString: "E5D8C4").cgColor
+
+        addSubview(contentCard)
+        [titleLabel, volumeSlider, muteButton].forEach(contentCard.addSubview)
+
+        contentCard.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
+            $0.top.equalToSuperview().offset(12)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(30)
         }
 
         muteButton.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(8)
-            $0.right.equalToSuperview().inset(8)
+            $0.right.equalToSuperview().inset(12)
             $0.width.height.equalTo(40)
         }
         
         volumeSlider.snp.makeConstraints {
             $0.centerY.equalTo(muteButton.snp.centerY)
-            $0.left.equalToSuperview().inset(8)
+            $0.left.equalToSuperview().inset(14)
             $0.right.equalTo(muteButton.snp.left).offset(-8)
         }
         

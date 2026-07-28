@@ -90,8 +90,18 @@ final class HistoryViewController: UIViewController {
     }
     
     func presentEmptyChatVC() {
-        let conversation = ChatDataManager.shared.createConversation(title: "", character: nil)
-        presentChatVC(conversation: conversation)
+        let vc = WisdomQuestionLauncherViewController()
+        vc.delegate = self
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
+    }
+}
+
+extension HistoryViewController: WisdomQuestionLauncherDelegate {
+    func wisdomQuestionLauncher(_ launcher: WisdomQuestionLauncherViewController, didCreate conversation: ConversationCodable) {
+        launcher.dismiss(animated: true) { [weak self] in
+            self?.presentChatVC(conversation: conversation)
+        }
     }
 }
 
@@ -200,4 +210,3 @@ private extension HistoryViewController {
     }
     
 }
-

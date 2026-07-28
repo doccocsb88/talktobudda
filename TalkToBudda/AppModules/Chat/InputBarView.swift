@@ -12,20 +12,22 @@ class InputBarView: UIView {
 
     private lazy var textField: UITextField = {
         let textField = UITextField()
-        textField.leftView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 20, height: 44)))
+        textField.leftView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 18, height: 56)))
         textField.leftViewMode = .always
         let placeholderText = "Ask your question and seek wisdom..."
         let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor:  UIColor.color7D5A4F,
-            .font: FontFamily.PlayfairDisplay.regular.font(size: 13)
+            .foregroundColor: UIColor(hexString: "#B8A28C"),
+            .font: FontFamily.Inter28pt.regular.font(size: 17)
         ]
 
         textField.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: attributes)
-
-        textField.font = FontFamily.PlayfairDisplay.regular.font(size: 14)
-        textField.backgroundColor = UIColor(hexString: "D7CBB7")
+        textField.font = FontFamily.Inter28pt.regular.font(size: 17)
+        textField.backgroundColor = UIColor(hexString: "#FBF6F0")
         textField.textColor = .color4B3621
-        textField.rounded(radius: 22)
+        textField.layer.cornerRadius = 22
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor(hexString: "#E9D8C5").cgColor
+        textField.clipsToBounds = true
         return textField
     }()
     
@@ -46,23 +48,25 @@ class InputBarView: UIView {
         addSubview(textField)
         addSubview(sendButton)
 
-        
-        sendButton.setImage(UIImage(systemName: "arrow.right")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .medium)
+        sendButton.setImage(UIImage(systemName: "arrow.right", withConfiguration: config)?.withRenderingMode(.alwaysTemplate), for: .normal)
         sendButton.tintColor = .color4B3621
-        sendButton.rounded(radius: 12)
-        sendButton.backgroundColor = UIColor(hexString: "D7CBB7")
+        sendButton.rounded(radius: 28)
+        sendButton.backgroundColor = UIColor(hexString: "#F1DFC2")
+        sendButton.layer.borderWidth = 1
+        sendButton.layer.borderColor = UIColor(hexString: "#E0C7A6").cgColor
         
         textField.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(16)
+            make.left.equalToSuperview()
             make.centerY.equalToSuperview()
             make.right.equalTo(sendButton.snp.left).offset(-8)
-            make.height.equalTo(44)
+            make.height.equalTo(56)
         }
 
         sendButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().offset(-16)
+            make.right.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(44)
+            make.width.height.equalTo(56)
         }
         
         sendButton.addTarget(self, action: #selector(tappedSend(_:)), for: .touchUpInside)
@@ -78,6 +82,7 @@ class InputBarView: UIView {
     
     func uploadLoadingState(_ loading: Bool) {
         sendButton.isEnabled = !loading
+        sendButton.alpha = loading ? 0.65 : 1
     }
     
     @objc func tappedSend(_ sender: UIButton) {

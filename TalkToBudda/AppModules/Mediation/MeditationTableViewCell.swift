@@ -11,26 +11,37 @@ import SnapKit
 class MeditationTableViewCell: UITableViewCell {
     
     // MARK: - UI Elements
+    private let cardView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.55)
+        view.layer.cornerRadius = 22
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor(hexString: "#E3D4BF").cgColor
+        return view
+    }()
+
     private let thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 8
+        imageView.layer.cornerRadius = 34
+        imageView.backgroundColor = UIColor(hexString: "#F7EEDF")
         return imageView
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.numberOfLines = 1
+        label.font = FontFamily.PlayfairDisplay.bold.font(size: 16)
+        label.textColor = UIColor(hexString: "#4B3621")
+        label.numberOfLines = 2
         return label
     }()
     
     private let purposeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .gray
-        label.numberOfLines = 2
+        label.font = FontFamily.Inter28pt.regular.font(size: 14)
+        label.textColor = UIColor(hexString: "#6F6A63")
+        label.numberOfLines = 3
         return label
     }()
     
@@ -66,29 +77,33 @@ class MeditationTableViewCell: UITableViewCell {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         selectionStyle = .none
-        contentView.addSubview(thumbnailImageView)
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(purposeLabel)
+        contentView.addSubview(cardView)
+        [thumbnailImageView, nameLabel, purposeLabel].forEach(cardView.addSubview)
         thumbnailImageView.contentMode = .scaleAspectFit
-        thumbnailImageView.rounded(radius: 30)
+        thumbnailImageView.rounded(radius: 34)
+
+        cardView.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0))
+        }
         
         thumbnailImageView.snp.makeConstraints { make in
-            make.width.height.equalTo(60)
-            make.leading.equalToSuperview().offset(10)
+            make.width.height.equalTo(68)
+            make.leading.equalToSuperview().offset(16)
+            make.top.greaterThanOrEqualToSuperview().offset(16)
             make.centerY.equalToSuperview()
         }
         
         nameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview().offset(18)
             make.leading.equalTo(thumbnailImageView.snp.trailing).offset(10)
-            make.trailing.equalToSuperview().offset(-10)
+            make.trailing.equalToSuperview().offset(-16)
         }
         
         purposeLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameLabel.snp.bottom).offset(4)
+            make.top.equalTo(nameLabel.snp.bottom).offset(8)
             make.leading.equalTo(nameLabel)
-            make.trailing.equalToSuperview().offset(-10)
-            make.bottom.equalToSuperview().offset(-10)
+            make.trailing.equalToSuperview().offset(-16)
+            make.bottom.equalToSuperview().offset(-18)
         }
         
 //        methodLabel.snp.makeConstraints { make in

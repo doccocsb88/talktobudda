@@ -123,6 +123,14 @@ class MeditationGuideVC: UIViewController {
         methodLabel.font = FontFamily.PlayfairDisplay.regular.font(size: 16)
         benefitsLabel.font = FontFamily.PlayfairDisplay.regular.font(size: 16)
         practiceTitleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 16)
+
+        let bodyTextColor = UIColor(hexString: "#6F6A63")
+        let headingTextColor = UIColor(hexString: "#4B3621")
+
+        purposeLabel.textColor = bodyTextColor
+        methodLabel.textColor = bodyTextColor
+        benefitsLabel.textColor = bodyTextColor
+        practiceTitleLabel.textColor = headingTextColor
     }
     
     func populateData() {
@@ -144,6 +152,7 @@ class MeditationGuideVC: UIViewController {
             stepLabel.text = "\(index + 1). \(step)"
             stepLabel.numberOfLines = 0
             stepLabel.font = FontFamily.PlayfairDisplay.regular.font(size: 16)
+            stepLabel.textColor = UIColor(hexString: "#6F6A63")
             practiceStackView.addArrangedSubview(stepLabel)
         }
     }

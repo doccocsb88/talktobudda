@@ -19,6 +19,7 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
         label.text = "How do you feel today?"
         label.textAlignment = .center
         label.font = FontFamily.PlayfairDisplay.italic.font(size: 16)
+        label.textColor = UIColor(hexString: "#9A806E")
         return label
     }()
     
@@ -142,10 +143,15 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
         }
         
         mediationTableView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview()
-            make.top.equalTo(startButton.snp.bottom).offset(8)
+            make.left.right.equalToSuperview().inset(16)
+            make.top.equalTo(startButton.snp.bottom).offset(16)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
+
+        mediationTableView.separatorStyle = .none
+        mediationTableView.rowHeight = UITableView.automaticDimension
+        mediationTableView.estimatedRowHeight = 128
+        mediationTableView.contentInset = UIEdgeInsets(top: 4, left: 0, bottom: 20, right: 0)
     }
     
     @objc private func moodTapped(_ sender: UIButton) {

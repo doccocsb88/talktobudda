@@ -5,7 +5,7 @@
 //  Created by mac on 6/5/25.
 //
 
-import Foundation
+import UIKit
 import RealmSwift
 
 enum CharacterType: String, Codable, PersistableEnum, CaseIterable {
@@ -33,11 +33,11 @@ enum CharacterType: String, Codable, PersistableEnum, CaseIterable {
         case .spiritualTeacher:
             return "Spiritual Teacher"
         case .jesus:
-            return "Chúa Jesus"
+            return "Jesus"
         case .mary:
-            return "Đức Maria"
+            return "Mary"
         case .wisePhilosopher:
-            return "Nhà Hiền Triết"
+            return "Wise Philosopher"
         case .marcusAurelius:
             return "Marcus Aurelius"
         case .socrates:
@@ -48,25 +48,100 @@ enum CharacterType: String, Codable, PersistableEnum, CaseIterable {
     var description: String {
         switch self {
         case .buddha:
-            return "The enlightened one, sharing wisdom and compassion"
+            return "Gentle guidance for calm, balance, and mindfulness"
         case .monk:
-            return "A devoted monk with deep spiritual insights"
+            return "Quiet spiritual insight for patience, faith, and inner peace"
         case .zenMaster:
-            return "A master of Zen philosophy and mindfulness"
+            return "Mindful perspective for presence, simplicity, and Zen reflection"
         case .meditationGuide:
-            return "A gentle guide for your meditation journey"
+            return "Steady support for meditation, breathing, and daily calm"
         case .spiritualTeacher:
-            return "A wise teacher of spiritual principles"
+            return "Thoughtful guidance on meaning, growth, and spiritual practice"
         case .jesus:
-            return "Giọng văn yêu thương, tha thứ, khuyên bảo nhẹ nhàng"
+            return "A compassionate voice of love, forgiveness, and gentle guidance"
         case .mary:
-            return "Giọng mẫu tử, an ủi, vỗ về"
+            return "A nurturing presence offering comfort, care, and reassurance"
         case .wisePhilosopher:
-            return "Giọng triết lý sâu sắc, dùng ngụ ngôn (Lão Tử, Khổng Tử)"
+            return "Ancient philosophical wisdom through stories, balance, and virtue"
         case .marcusAurelius:
-            return "Triết lý Stoicism, cách đối mặt nghịch cảnh"
+            return "Stoic wisdom for facing adversity with courage and discipline"
         case .socrates:
-            return "Phương pháp đặt câu hỏi để tự khai sáng"
+            return "Questions that help you examine assumptions and think clearly"
+        }
+    }
+
+    var bestForLabel: String {
+        switch self {
+        case .buddha:
+            return "Best for calm reflection"
+        case .monk:
+            return "Best for daily discipline"
+        case .zenMaster:
+            return "Best for deep presence"
+        case .meditationGuide:
+            return "Best for guided practice"
+        case .spiritualTeacher:
+            return "Best for life direction"
+        case .jesus:
+            return "Best for forgiveness and faith"
+        case .mary:
+            return "Best for comfort and reassurance"
+        case .wisePhilosopher:
+            return "Best for thoughtful perspective"
+        case .marcusAurelius:
+            return "Best for resilience and control"
+        case .socrates:
+            return "Best for hard questions"
+        }
+    }
+
+    var chatSubtitle: String {
+        switch self {
+        case .buddha:
+            return "Mindfulness guide"
+        case .monk:
+            return "Monastic guide"
+        case .zenMaster:
+            return "Zen guide"
+        case .meditationGuide:
+            return "Meditation coach"
+        case .spiritualTeacher:
+            return "Spiritual guide"
+        case .jesus:
+            return "Faith guide"
+        case .mary:
+            return "Comforting guide"
+        case .wisePhilosopher:
+            return "Philosophy guide"
+        case .marcusAurelius:
+            return "Stoic guide"
+        case .socrates:
+            return "Questioning guide"
+        }
+    }
+
+    var handoffSummary: String {
+        switch self {
+        case .buddha:
+            return "Best when you want calm reflection, balance, and a softer pace of thought."
+        case .monk:
+            return "Best when you want steady habits, grounded perspective, and disciplined next steps."
+        case .zenMaster:
+            return "Best when you want direct perspective, fewer words, and deeper presence."
+        case .meditationGuide:
+            return "Best when you want practical exercises, breathing support, and guided calm."
+        case .spiritualTeacher:
+            return "Best when you want meaning, encouragement, and spiritual direction across life questions."
+        case .jesus:
+            return "Best when you want guidance rooted in love, forgiveness, faith, and mercy."
+        case .mary:
+            return "Best when you want reassurance, tenderness, and gentle steps through emotional pain."
+        case .wisePhilosopher:
+            return "Best when you want broader perspective, reflection, and wisdom through ideas."
+        case .marcusAurelius:
+            return "Best when you want resilience, self-command, and calm action under pressure."
+        case .socrates:
+            return "Best when you want sharper questions, self-examination, and clearer thinking."
         }
     }
     
@@ -108,15 +183,149 @@ enum CharacterType: String, Codable, PersistableEnum, CaseIterable {
         case .spiritualTeacher:
             return "Welcome, dear soul. I'm here to share spiritual insights and guidance."
         case .jesus:
-            return "Chào con, Ta yêu thương con vô cùng. Hãy để Ta dẫn dắt con trên con đường của tình yêu và sự tha thứ."
+            return "Peace be with you. Let us walk with love, forgiveness, and a gentler heart."
         case .mary:
-            return "Con yêu ơi, mẹ ở đây để an ủi và vỗ về con. Hãy chia sẻ những lo lắng của con với mẹ."
+            return "You are not alone. Share what weighs on your heart, and let us seek comfort together."
         case .wisePhilosopher:
-            return "Xin chào, ta là nhà hiền triết. Hãy để ta chia sẻ những triết lý sâu sắc qua những câu chuyện ngụ ngôn."
+            return "Greetings. Let us look at your question through the old wisdom of balance, virtue, and the way of nature."
         case .marcusAurelius:
-            return "Chào bạn, tôi là Marcus Aurelius. Hãy cùng tôi học cách đối mặt với nghịch cảnh bằng triết lý Stoicism."
+            return "I am Marcus Aurelius. Let us face this moment with reason, discipline, and attention to what is within your control."
         case .socrates:
-            return "Xin chào! Tôi là Socrates. Thay vì cho bạn câu trả lời, tôi sẽ đặt câu hỏi để bạn tự khám phá chân lý."
+            return "I am Socrates. Rather than rush to an answer, let us question carefully until the truth becomes clearer."
+        }
+    }
+
+    var avatarSymbolName: String {
+        switch self {
+        case .buddha:
+            return "sun.max"
+        case .monk:
+            return "figure.walk"
+        case .zenMaster:
+            return "torii.gate"
+        case .meditationGuide:
+            return "flame"
+        case .spiritualTeacher:
+            return "book"
+        case .jesus:
+            return "heart"
+        case .mary:
+            return "moon.stars"
+        case .wisePhilosopher:
+            return "leaf"
+        case .marcusAurelius:
+            return "shield"
+        case .socrates:
+            return "bubble.left.and.bubble.right"
+        }
+    }
+
+    var avatarInitials: String {
+        switch self {
+        case .buddha:
+            return "B"
+        case .monk:
+            return "WM"
+        case .zenMaster:
+            return "ZM"
+        case .meditationGuide:
+            return "MG"
+        case .spiritualTeacher:
+            return "ST"
+        case .jesus:
+            return "J"
+        case .mary:
+            return "M"
+        case .wisePhilosopher:
+            return "WP"
+        case .marcusAurelius:
+            return "MA"
+        case .socrates:
+            return "S"
+        }
+    }
+
+    var avatarPalette: [UIColor] {
+        switch self {
+        case .buddha:
+            return [UIColor(hexString: "#E8C98C"), UIColor(hexString: "#C9954D")]
+        case .monk:
+            return [UIColor(hexString: "#DDB980"), UIColor(hexString: "#A86C3A")]
+        case .zenMaster:
+            return [UIColor(hexString: "#D3C1A4"), UIColor(hexString: "#8F6A43")]
+        case .meditationGuide:
+            return [UIColor(hexString: "#E3D2B2"), UIColor(hexString: "#C49B63")]
+        case .spiritualTeacher:
+            return [UIColor(hexString: "#DCC6A3"), UIColor(hexString: "#A37B43")]
+        case .jesus:
+            return [UIColor(hexString: "#D9B7A0"), UIColor(hexString: "#A66B58")]
+        case .mary:
+            return [UIColor(hexString: "#C9D4E4"), UIColor(hexString: "#8B99B8")]
+        case .wisePhilosopher:
+            return [UIColor(hexString: "#CFD7B1"), UIColor(hexString: "#7E9461")]
+        case .marcusAurelius:
+            return [UIColor(hexString: "#CDBE8F"), UIColor(hexString: "#8C7A46")]
+        case .socrates:
+            return [UIColor(hexString: "#D8C6BA"), UIColor(hexString: "#8F6A59")]
+        }
+    }
+
+    var avatarImage: UIImage {
+        if let image = UIImage(named: avatarImageName) {
+            return image
+        }
+        return Self.makeGeneratedAvatar(
+            initials: avatarInitials,
+            symbolName: avatarSymbolName,
+            colors: avatarPalette
+        )
+    }
+
+    private static func makeGeneratedAvatar(initials: String, symbolName: String, colors: [UIColor]) -> UIImage {
+        let size = CGSize(width: 120, height: 120)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { context in
+            let rect = CGRect(origin: .zero, size: size)
+            let cgColors = colors.map(\.cgColor) as CFArray
+            let colorSpace = CGColorSpaceCreateDeviceRGB()
+            let locations: [CGFloat] = [0, 1]
+            let gradient = CGGradient(colorsSpace: colorSpace, colors: cgColors, locations: locations)
+
+            context.cgContext.saveGState()
+            let circlePath = UIBezierPath(ovalIn: rect)
+            circlePath.addClip()
+            if let gradient {
+                context.cgContext.drawLinearGradient(
+                    gradient,
+                    start: CGPoint(x: 0, y: 0),
+                    end: CGPoint(x: size.width, y: size.height),
+                    options: []
+                )
+            }
+
+            UIColor.white.withAlphaComponent(0.18).setFill()
+            context.cgContext.fillEllipse(in: CGRect(x: 14, y: 12, width: 48, height: 34))
+            UIColor.black.withAlphaComponent(0.06).setStroke()
+            context.cgContext.setLineWidth(2)
+            context.cgContext.strokeEllipse(in: rect.insetBy(dx: 2, dy: 2))
+            context.cgContext.restoreGState()
+
+            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 32, weight: .medium)
+            if let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)?
+                .withTintColor(.white.withAlphaComponent(0.88), renderingMode: .alwaysOriginal) {
+                let symbolRect = CGRect(x: 44, y: 26, width: 32, height: 32)
+                symbol.draw(in: symbolRect)
+            }
+
+            let paragraph = NSMutableParagraphStyle()
+            paragraph.alignment = .center
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: FontFamily.PlayfairDisplay.bold.font(size: 28),
+                .foregroundColor: UIColor.white,
+                .paragraphStyle: paragraph
+            ]
+            let textRect = CGRect(x: 12, y: 68, width: 96, height: 34)
+            initials.draw(in: textRect, withAttributes: attributes)
         }
     }
 }
@@ -137,5 +346,21 @@ struct Character: Codable {
     
     var greetingMessage: String {
         return type.greetingMessage
+    }
+
+    var avatarImage: UIImage {
+        return type.avatarImage
+    }
+
+    var bestForLabel: String {
+        return type.bestForLabel
+    }
+
+    var chatSubtitle: String {
+        return type.chatSubtitle
+    }
+
+    var handoffSummary: String {
+        return type.handoffSummary
     }
 }

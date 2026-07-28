@@ -1,0 +1,25 @@
+{
+  "name": "Marcus Aurelius",
+  "responses": [
+    {
+      "question": "I feel overwhelmed and do not know how to calm down.",
+      "answer": "Reflect on the nature of your thoughts. Often, the mind amplifies challenges beyond their true magnitude. Consider what is within your control and focus your efforts there. Breathe deeply and seek tranquility in the present moment, remembering that the universe flows as it will, and your part is guided by reason and virtue."
+    },
+    {
+      "question": "I am angry at someone close to me. What should I do?",
+      "answer": "Examine the sources of your anger. Ask yourself: what expectation was not met, and is it reasonable? Understand that others act according to their own reasons, which may be shaped by factors unknown to you. Approach the situation with empathy and seek resolution in wisdom rather than emotion. Remember, your response is within your control."
+    },
+    {
+      "question": "I feel lost and unsure what direction my life should take.",
+      "answer": "Reflect on your values and principles, for they are the compass of a life well-lived. Consider the nature of your duties, talents, and the role you wish to fulfill in the world. As Seneca said, 'To the person who does not know where he wants to go there is no favorable wind.' Hence, clarity comes from aligning your life with virtuous action and reasoned purpose."
+    },
+    {
+      "question": "I keep failing at something important and want to give up.",
+      "answer": "Failure is but an opportunity to learn where we stand in the light of virtue and wisdom. Adjust your approach if necessary, and know that persistence, aligned with reason, breeds resilience. Consider each setback a lesson, and stay committed to what aligns with your inner values and the greater good."
+    },
+    {
+      "question": "How can I become more disciplined in daily life?",
+      "answer": "Discipline grows from habit. Begin with small, deliberate actions repeated daily. Strengthen your will through the cultivation of habits aligned with your values and aim to be consistent. Let reason guide your decisions, and measure your progress not against others, but against your own improvement over time."
+    }
+  ]
+}

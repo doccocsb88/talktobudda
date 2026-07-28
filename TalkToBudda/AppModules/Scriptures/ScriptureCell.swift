@@ -36,53 +36,66 @@ final class ScriptureCell: UITableViewCell {
         contentView.backgroundColor = .clear
         backgroundColor = .clear
         holderView.backgroundColor = UIColor(hexString: "FEEABE")
-        holderView.rounded(radius: 12)
+        holderView.rounded(radius: 18)
+        holderView.layer.borderWidth = 1
+        holderView.layer.borderColor = UIColor(hexString: "EBCF8E").cgColor
         
-        titleLabel.font = FontFamily.FiraMono.bold.font(size: 16)
+        titleLabel.font = FontFamily.FiraMono.bold.font(size: 15)
         titleLabel.textColor = UIColor(hexString: "6D4321")
-        descriptionLabel.font = FontFamily.FiraMono.regular.font(size: 14)
-        descriptionLabel.textColor = UIColor(hexString: "6D4321")
-        descriptionLabel.numberOfLines = 3
+        titleLabel.numberOfLines = 2
+
+        descriptionLabel.font = FontFamily.FiraMono.regular.font(size: 12)
+        descriptionLabel.textColor = UIColor(hexString: "7A5A38")
+        descriptionLabel.numberOfLines = 2
         
         arrowIcon.contentMode = .scaleAspectFit
-        arrowIcon.tintColor = .neutral950
+        arrowIcon.tintColor = UIColor(hexString: "6D4321")
         
         contentView.addSubview(holderView)
         holderView.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(12)
-            make.top.equalToSuperview().offset(4)
-            make.center.equalToSuperview()
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
         }
         
         [thumbImageView, titleLabel, descriptionLabel, arrowIcon].forEach({holderView.addSubview($0)})
 
         thumbImageView.snp.makeConstraints { make in
             make.top.left.equalToSuperview().offset(16)
-            make.width.height.equalTo(60)
+            make.width.height.equalTo(64)
         }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(12)
+            $0.top.equalToSuperview().offset(16)
             $0.leading.equalTo(thumbImageView.snp.trailing).offset(16)
-            $0.trailing.lessThanOrEqualTo(arrowIcon.snp.leading).offset(-8)
+            $0.trailing.equalTo(arrowIcon.snp.leading).offset(-12)
         }
 
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(4)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(10)
             $0.leading.equalTo(titleLabel)
-            $0.right.equalTo(arrowIcon.snp.left).offset(-8)
+            $0.right.equalTo(arrowIcon.snp.left).offset(-12)
+            $0.bottom.lessThanOrEqualToSuperview().inset(16)
         }
 
         arrowIcon.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(16)
-            $0.width.height.equalTo(20)
+            $0.width.height.equalTo(18)
         }
     }
 
     func configure(with entity: ScriptureEntity) {
         titleLabel.text = entity.title
-        descriptionLabel.text = entity.description
+        descriptionLabel.text = condensedDescription(from: entity.description)
+    }
+
+    private func condensedDescription(from description: String) -> String {
+        let compact = description.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+        if compact.count <= 120 {
+            return compact
+        }
+
+        let index = compact.index(compact.startIndex, offsetBy: 117)
+        return String(compact[..<index]).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
     }
 }
 

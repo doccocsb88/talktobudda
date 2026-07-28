@@ -110,25 +110,17 @@ extension ResourceTagManager {
     
     // MARK: - Get URL of Resource
     func urlForResource(fileName: String, in tag: ResourceTag) -> URL? {
-        guard let bundle = currentRequest?.bundle else { return nil }
+        let nsFileName = fileName as NSString
+        let resourceName = nsFileName.deletingPathExtension
+        let resourceExtension = nsFileName.pathExtension.isEmpty ? nil : nsFileName.pathExtension
 
-        guard let resourcePath = bundle.resourcePath else {
-            print("❌ Không tìm thấy đường dẫn Bundle chính")
-            return nil
+        if let bundle = resourceRequests[tag]?.bundle ?? currentRequest?.bundle,
+           let odrURL = bundle.url(forResource: resourceName, withExtension: resourceExtension) {
+            return odrURL
         }
-        
-//        let folderPath = "\(resourcePath)/\(tag.rawValue)"
-//        let filePath = "\(folderPath)/\(fileName)"
-//        
-//        if FileManager.default.fileExists(atPath: filePath) {
-//            print("📄 File path found: \(filePath)")
-//            return URL(fileURLWithPath: filePath)
-//        } else {
-//            print("❌ Không tìm thấy file: \(fileName) trong \(folderPath)")
-//            return nil
-//        }
-//        
-        return bundle.url(forResource: fileName, withExtension: "")
+
+        // Useful for local debug builds where the file may also be present in the main bundle.
+        return Bundle.main.url(forResource: resourceName, withExtension: resourceExtension)
     }
 }
 
