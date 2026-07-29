@@ -17,29 +17,15 @@ class LoadingVC: UIViewController {
         return imageView
     }()
     
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Focus the mind"
-        label.font = FontFamily.FiraMono.medium.font(size: 14)
-        label.textColor = .color4B3621
-        return label
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .colorFDF6ED
         view.addSubview(imageView)
-        view.addSubview(titleLabel)
         imageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(view.hasTopNorth ? 200 : 100)
+            make.center.equalToSuperview()
             make.centerX.equalToSuperview()
-            make.left.equalToSuperview().offset(30)
-            make.height.equalTo(imageView.snp.width).multipliedBy(1.5)
-        }
-        
-        titleLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.left.equalToSuperview().offset(24)
+            make.right.equalToSuperview().offset(-24)
         }
         
         Timer.scheduledTimer(withTimeInterval: 3, repeats: false) {[weak self] _ in

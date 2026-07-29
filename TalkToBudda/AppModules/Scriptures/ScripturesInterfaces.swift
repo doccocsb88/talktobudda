@@ -20,12 +20,47 @@ struct ScriptureEntity: Codable {
     var tags: [String] {
         return []
     }
+
+    var shortDisplayTitle: String {
+        if title.contains("Dhammapada") || title.contains("Sayings of the Dhamma") {
+            return "Dhammapada"
+        }
+        if title.contains("Majjhimanik") {
+            return "Majjhima Nikaya"
+        }
+        if title.contains("Saṁyutta") || title.contains("Linked Discourses") {
+            return "Samyutta Nikaya"
+        }
+        if title.contains("Aṅguttara") || title.contains("Numbered Discourses") {
+            return "Anguttara Nikaya"
+        }
+        if title.contains("Sutta Nip") || title.contains("Anthology of Discourses") {
+            return "Sutta Nipata"
+        }
+        if title.contains("Basic Passages") {
+            return "Basic Passages"
+        }
+        if title.contains("Compendium of States of Phenomena") {
+            return "Compendium of States"
+        }
+        if title.contains("Book of Analysis") {
+            return "Book of Analysis"
+        }
+        return title
+    }
+}
+
+struct ScriptureCollectionEntity: Equatable {
+    let title: String
+    let subtitle: String
+    let resourceTag: ResourceTag
 }
 
 // MARK: - Viewable
 protocol ScriptureViewable: AnyObject {
     var presenter: ScripturePresentable? { get set }
-    func displayScriptures(_ scriptures: [ScriptureEntity])
+    func displayBrowseContent(scriptures: [ScriptureEntity], collections: [ScriptureCollectionEntity])
+    func displaySearchResults(_ scriptures: [ScriptureEntity])
 }
 
 // MARK: - Interactable

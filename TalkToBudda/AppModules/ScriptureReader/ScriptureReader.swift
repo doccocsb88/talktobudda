@@ -146,9 +146,11 @@ class ScriptureReaderVC: UIViewController {
             
             // Đọc page đã lưu từ UserDefaults
             let lastPage = UserDefaults.standard.integer(forKey: lastPageKey)
-            if let page = pdfView.document?.page(at: lastPage) {
+            let lastSafePage = min(max(lastPage, 0), max(document.pageCount - 1, 0))
+            if let page = pdfView.document?.page(at: lastSafePage) {
                 pdfView.go(to: page)
             }
+            saveCurrentProgress()
             print("✅ Tải PDF thành công: \(url.lastPathComponent)")
         } else {
             showResourceLoadError()
@@ -156,7 +158,20 @@ class ScriptureReaderVC: UIViewController {
     }
     
     @objc func tappedCloseButton(_ sender: UIButton) {
+        saveCurrentProgress()
         dismiss(animated: true)
+    }
+
+    private func saveCurrentProgress() {
+        guard let pdfDocument = pdfView.document,
+              let currentPage = pdfView.currentPage else { return }
+        let currentIndex = pdfDocument.index(for: currentPage)
+        UserDefaults.standard.set(currentIndex, forKey: lastPageKey)
+        ScriptureReadingProgressStore.shared.saveProgress(
+            for: scripture,
+            currentPage: currentIndex,
+            totalPages: pdfDocument.pageCount
+        )
     }
 }
 
@@ -164,13 +179,6 @@ class ScriptureReaderVC: UIViewController {
 extension ScriptureReaderVC: PDFViewDelegate {
     // MARK: - PDFViewDelegate
     @objc func pdfViewWillChangePage() {
-        
-        guard let pdfDocument = pdfView.document else { return }
-        guard let currentPage = pdfView.currentPage else { return }
-        let currentIndex = pdfDocument.index(for: currentPage)
-        
-        // Lưu lại số trang khi người dùng scroll
-        UserDefaults.standard.set(currentIndex, forKey: lastPageKey)
-        print("Saved page: \(currentIndex)")
+        saveCurrentProgress()
     }
 }

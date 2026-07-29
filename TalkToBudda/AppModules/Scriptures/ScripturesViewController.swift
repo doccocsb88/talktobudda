@@ -13,267 +13,319 @@ import RxCocoa
 import SnapKit
 
 final class ScriptureViewController: UIViewController, ScriptureViewable {
+    private enum Section {
+        case continueReading
+        case collections
+        case searchResults
+    }
 
     var presenter: ScripturePresentable?
-    private var scriptures: [ScriptureEntity] = []
+
+    private var allScriptures: [ScriptureEntity] = []
+    private var collections: [ScriptureCollectionEntity] = []
+    private var searchResults: [ScriptureEntity] = []
+    private var activeSections: [Section] = [.collections]
 
     private let searchBar = UISearchBar()
-    private let tableView = UITableView()
-    private let navView = UIView()
+    private let tableView = UITableView(frame: .zero, style: .plain)
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
-    
-    // Empty state view
     private let emptyView = UIView()
     private let emptyImageView = UIImageView()
     private let emptyTitleLabel = UILabel()
     private let emptyMessageLabel = UILabel()
-    
-    // Keyboard handling properties
-    private var keyboardHeight: CGFloat = 0
-    private var isKeyboardVisible: Bool = false
-    
+
+    private var isSearching: Bool {
+        !(searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private var continueRecord: ScriptureReadingProgress? {
+        ScriptureReadingProgressStore.shared.mostRecentRecord()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.setNavigationBarHidden(true, animated: false)
         setupUI()
-        setupKeyboardObservers()
         presenter?.viewDidLoad()
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        removeKeyboardObservers()
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reloadSections()
     }
 
     private func setupUI() {
-        view.backgroundColor = .colorFDF6ED
+        view.backgroundColor = ThemeColor.screenBackground
 
-        [navView, searchBar, tableView, emptyView].forEach({view.addSubview($0)})
-        navView.snp.makeConstraints { make in
-            make.left.right.equalToSuperview()
-            make.height.equalTo(44)
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-        }
-        navView.addSubview(titleLabel)
-        navView.addSubview(subtitleLabel)
-        titleLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(2)
-        }
-        subtitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(4)
-            make.leading.trailing.equalToSuperview().inset(24)
-        }
-        titleLabel.text = "Scriptures".capitalized
-        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 28)
-        titleLabel.textAlignment = .center
-        titleLabel.textColor = UIColor(hexString: "#4B3621")
-        subtitleLabel.text = "Read slowly, search directly, return often."
-        subtitleLabel.font = FontFamily.Inter28pt.regular.font(size: 14)
-        subtitleLabel.textAlignment = .center
-        subtitleLabel.textColor = UIColor(hexString: "#90755A")
+        titleLabel.text = "Scriptures"
+        titleLabel.applyThemeTextStyle(font: ThemeFont.display(31), color: ThemeColor.textPrimary, alignment: .center)
+
+        subtitleLabel.text = "Explore timeless teachings."
+        subtitleLabel.applyThemeTextStyle(font: ThemeFont.body(15), color: ThemeColor.textSecondary, alignment: .center)
 
         searchBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
         searchBar.backgroundColor = .clear
+        searchBar.delegate = self
+
         if let searchField = searchBar.value(forKey: "searchField") as? UITextField {
-            searchField.backgroundColor = .clear
-            searchField.backgroundColor = UIColor(hexString: "FDE9AF")
-            searchField.rounded(radius: 20)
-            searchField.font = FontFamily.Inter28pt.medium.font(size: 15)
-            searchField.textColor = UIColor(hexString: "#6D4321")
+            searchField.backgroundColor = ThemeColor.surfaceBadge
+            searchField.layer.cornerRadius = 22
+            searchField.clipsToBounds = true
+            searchField.font = ThemeFont.bodyMedium()
+            searchField.textColor = ThemeColor.textPrimary
             searchField.attributedPlaceholder = NSAttributedString(
                 string: "Search sutras or keywords...",
-                attributes: [.foregroundColor: UIColor(hexString: "#9A7B57")]
+                attributes: [.foregroundColor: ThemeColor.textMuted]
             )
-        }
-        
-        searchBar.delegate = self
-        searchBar.snp.makeConstraints {
-            $0.top.equalTo(navView.snp.bottom).offset(14)
-            $0.leading.trailing.equalToSuperview().inset(16)
-            $0.height.equalTo(50)
+            if let iconView = searchField.leftView as? UIImageView {
+                iconView.tintColor = ThemeColor.textTertiary
+            }
         }
 
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(ScriptureCell.self, forCellReuseIdentifier: "ScriptureCell")
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 20, right: 0)
-        
-        // Add tap gesture to hide keyboard
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        tapGesture.cancelsTouchesInView = false
-        tableView.addGestureRecognizer(tapGesture)
-        
-        tableView.snp.makeConstraints {
-            $0.top.equalTo(searchBar.snp.bottom).offset(10)
-            $0.leading.trailing.bottom.equalToSuperview()
+        tableView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 24, right: 0)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(ContinueReadingCell.self, forCellReuseIdentifier: ContinueReadingCell.reuseIdentifier)
+        tableView.register(ScriptureCollectionCell.self, forCellReuseIdentifier: ScriptureCollectionCell.reuseIdentifier)
+        tableView.register(ScriptureCell.self, forCellReuseIdentifier: "ScriptureCell")
+
+        [titleLabel, subtitleLabel, searchBar, tableView, emptyView].forEach(view.addSubview)
+
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(6)
+            make.left.right.equalToSuperview().inset(24)
         }
-        
+
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(6)
+            make.left.right.equalToSuperview().inset(24)
+        }
+
+        searchBar.snp.makeConstraints { make in
+            make.top.equalTo(subtitleLabel.snp.bottom).offset(12)
+            make.left.right.equalToSuperview().inset(16)
+            make.height.equalTo(46)
+        }
+
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(searchBar.snp.bottom).offset(10)
+            make.left.right.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+
         setupEmptyView()
     }
-    
+
     private func setupEmptyView() {
-        emptyView.backgroundColor = .clear
         emptyView.isHidden = true
-        
-        [emptyImageView, emptyTitleLabel, emptyMessageLabel].forEach({emptyView.addSubview($0)})
-        
-        // Empty image setup
-        emptyImageView.contentMode = .scaleAspectFit
+        emptyView.backgroundColor = .clear
+
         emptyImageView.image = UIImage(systemName: "doc.text.magnifyingglass")
-        emptyImageView.tintColor = UIColor(hexString: "#4B3621").withAlphaComponent(0.6)
-        
-        // Empty title setup
+        emptyImageView.tintColor = ThemeColor.textTertiary
+        emptyImageView.contentMode = .scaleAspectFit
+
         emptyTitleLabel.text = "No Results Found"
-        emptyTitleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 20)
-        emptyTitleLabel.textColor = UIColor(hexString: "#4B3621")
-        emptyTitleLabel.textAlignment = .center
-        
-        // Empty message setup
-        emptyMessageLabel.text = "Try searching with different keywords or browse all scriptures"
-        emptyMessageLabel.font = FontFamily.PlayfairDisplay.regular.font(size: 16)
-        emptyMessageLabel.textColor = UIColor(hexString: "#4B3621").withAlphaComponent(0.7)
-        emptyMessageLabel.textAlignment = .center
-        emptyMessageLabel.numberOfLines = 0
-        
-        // Constraints
+        emptyTitleLabel.applyThemeTextStyle(font: ThemeFont.sectionTitle(22), color: ThemeColor.textPrimary, alignment: .center)
+
+        emptyMessageLabel.text = "Try searching with different keywords or return to the collections below."
+        emptyMessageLabel.applyThemeTextStyle(font: ThemeFont.body(15), color: ThemeColor.textSecondary, alignment: .center, numberOfLines: 0)
+
+        [emptyImageView, emptyTitleLabel, emptyMessageLabel].forEach(emptyView.addSubview)
+
         emptyView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(8)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.left.right.bottom.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
         emptyImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(view.hasTopNorth ? -60 : -40)
-            make.width.height.equalTo(80)
+            make.centerY.equalToSuperview().offset(-52)
+            make.width.height.equalTo(72)
         }
-        
+
         emptyTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(emptyImageView.snp.bottom).offset(20)
-            make.leading.trailing.equalToSuperview().inset(40)
+            make.top.equalTo(emptyImageView.snp.bottom).offset(18)
+            make.left.right.equalToSuperview().inset(40)
         }
-        
+
         emptyMessageLabel.snp.makeConstraints { make in
-            make.top.equalTo(emptyTitleLabel.snp.bottom).offset(12)
-            make.leading.trailing.equalToSuperview().inset(40)
+            make.top.equalTo(emptyTitleLabel.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(40)
         }
-        
-        // Add tap gesture to hide keyboard
-        let emptyTapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        emptyView.addGestureRecognizer(emptyTapGesture)
     }
 
-    func displayScriptures(_ scriptures: [ScriptureEntity]) {
-        self.scriptures = scriptures
+    func displayBrowseContent(scriptures: [ScriptureEntity], collections: [ScriptureCollectionEntity]) {
+        allScriptures = scriptures
+        self.collections = collections
+        reloadSections()
+    }
+
+    func displaySearchResults(_ scriptures: [ScriptureEntity]) {
+        searchResults = scriptures
+        reloadSections()
+    }
+
+    private func reloadSections() {
+        if isSearching {
+            activeSections = [.searchResults]
+            let hasResults = !searchResults.isEmpty
+            tableView.isHidden = !hasResults
+            emptyView.isHidden = hasResults
+        } else {
+            activeSections = continueRecord == nil ? [.collections] : [.continueReading, .collections]
+            tableView.isHidden = false
+            emptyView.isHidden = true
+        }
+
         tableView.reloadData()
-        
-        // Show/hide empty view based on results
-        let hasResults = !scriptures.isEmpty
-        tableView.isHidden = !hasResults
-        emptyView.isHidden = hasResults
     }
-    
-    // MARK: - Keyboard Handling
-    
-    @objc private func hideKeyboard() {
-        view.endEditing(true)
+
+    private func scriptures(for collection: ScriptureCollectionEntity) -> [ScriptureEntity] {
+        allScriptures.filter { $0.resourceTag == collection.resourceTag }
     }
-    
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-    }
-    
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-        let keyboardHeight = keyboardFrame.cgRectValue.height
-        
-        // Only adjust if keyboard is not already visible
-        if !isKeyboardVisible {
-            self.keyboardHeight = keyboardHeight
-            
-            // Adjust tableView and emptyView bottom constraints to account for keyboard
-            tableView.snp.updateConstraints { make in
-                make.bottom.equalToSuperview().inset(keyboardHeight)
-            }
-            
-            emptyView.snp.updateConstraints { make in
-                make.bottom.equalToSuperview().inset(keyboardHeight)
-            }
-            
-            isKeyboardVisible = true
-            
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
+
+    private func routeToHistory() {
+        let vc = ScriptureHistoryViewController(scriptures: allScriptures) { [weak self] scripture in
+            self?.presenter?.didSelectScripture(scripture)
         }
+        navigationController?.pushViewController(vc, animated: true)
     }
-    
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        // Only restore if keyboard was visible
-        if isKeyboardVisible {
-            // Restore original bottom constraints
-            tableView.snp.updateConstraints { make in
-                make.bottom.equalToSuperview()
-            }
-            
-            emptyView.snp.updateConstraints { make in
-                make.bottom.equalToSuperview()
-            }
-            
-            isKeyboardVisible = false
-            
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
+
+    private func routeToCollection(_ collection: ScriptureCollectionEntity) {
+        let vc = ScriptureCollectionDetailViewController(
+            collection: collection,
+            scriptures: scriptures(for: collection)
+        ) { [weak self] scripture in
+            self?.presenter?.didSelectScripture(scripture)
         }
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    private func routeToContinueReading() {
+        guard let record = continueRecord,
+              let scripture = allScriptures.first(where: { $0.name == record.scriptureName }) else { return }
+        presenter?.didSelectScripture(scripture)
     }
 }
 
 extension ScriptureViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 132
+    func numberOfSections(in tableView: UITableView) -> Int {
+        activeSections.count
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        scriptures.count
+        switch activeSections[section] {
+        case .continueReading:
+            return continueRecord == nil ? 0 : 1
+        case .collections:
+            return collections.count
+        case .searchResults:
+            return searchResults.count
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ScriptureCell", for: indexPath) as? ScriptureCell else {
-            return UITableViewCell()
+        switch activeSections[indexPath.section] {
+        case .continueReading:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ContinueReadingCell.reuseIdentifier, for: indexPath) as? ContinueReadingCell,
+                  let record = continueRecord else {
+                return UITableViewCell()
+            }
+            cell.configure(with: record)
+            return cell
+        case .collections:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ScriptureCollectionCell.reuseIdentifier, for: indexPath) as? ScriptureCollectionCell else {
+                return UITableViewCell()
+            }
+            cell.configure(with: collections[indexPath.row])
+            cell.setShowsSeparator(indexPath.row < collections.count - 1)
+            return cell
+        case .searchResults:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "ScriptureCell", for: indexPath) as? ScriptureCell else {
+                return UITableViewCell()
+            }
+            cell.configure(with: searchResults[indexPath.row])
+            return cell
         }
-        cell.configure(with: scriptures[indexPath.row])
-        return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        presenter?.didSelectScripture(scriptures[indexPath.row])
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        switch activeSections[indexPath.section] {
+        case .continueReading:
+            routeToContinueReading()
+        case .collections:
+            routeToCollection(collections[indexPath.row])
+        case .searchResults:
+            presenter?.didSelectScripture(searchResults[indexPath.row])
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch activeSections[indexPath.section] {
+        case .continueReading:
+            return 150
+        case .collections:
+            return 92
+        case .searchResults:
+            return 132
+        }
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let sectionType = activeSections[section]
+        guard sectionType != .searchResults else { return nil }
+            return ScriptureSectionHeaderView(
+            title: sectionType == .continueReading ? "Continue Reading" : "Collections",
+            actionTitle: sectionType == .continueReading ? "View all" : nil,
+            actionHandler: sectionType == .continueReading ? { [weak self] in self?.routeToHistory() } : nil
+        )
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        activeSections[section] == .searchResults ? .leastNormalMagnitude : 46
     }
 }
 
 extension ScriptureViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         presenter?.search(keyword: searchText)
+    }
+}
+
+private final class ScriptureSectionHeaderView: UIView {
+    init(title: String, actionTitle: String?, actionHandler: (() -> Void)?) {
+        super.init(frame: .zero)
+
+        let titleLabel = UILabel()
+        titleLabel.applyThemeTextStyle(font: ThemeFont.sectionTitle(18), color: ThemeColor.textPrimary)
+        titleLabel.text = title
+        addSubview(titleLabel)
+
+        titleLabel.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(8)
+        }
+
+        if let actionTitle, let actionHandler {
+            let button = UIButton(type: .system)
+            button.setTitle(actionTitle, for: .normal)
+            button.setTitleColor(ThemeColor.accentWarmStrong, for: .normal)
+            button.titleLabel?.font = ThemeFont.bodyMedium(14)
+            button.addAction(UIAction { _ in actionHandler() }, for: .touchUpInside)
+            addSubview(button)
+            button.snp.makeConstraints { make in
+                make.right.equalToSuperview().inset(16)
+                make.centerY.equalTo(titleLabel)
+            }
+        }
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

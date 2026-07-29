@@ -13,32 +13,25 @@ import RxSwift
 
 final class MeditationMoodViewController: UIViewController, MeditationMoodViewable {
     var presenter: MeditationMoodPresentable?
-    private let introCardView = UIView()
+    private let introCardView = MutedThemeCardView()
     private let introLabel = UILabel()
     
     private let moodQuestionLabel: UILabel = {
         let label = UILabel()
         label.text = "How do you feel today?"
-        label.textAlignment = .center
-        label.font = FontFamily.PlayfairDisplay.italic.font(size: 16)
-        label.textColor = UIColor(hexString: "#9A806E")
+        label.applyThemeTextStyle(
+            font: ThemeFont.accentSerif(),
+            color: ThemeColor.textTertiary,
+            alignment: .center
+        )
         return label
     }()
     
     private var moodButtons: [MoodView] = []
     private let moodStackView = UIStackView()
     
-    private let startButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Start Meditation", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = FontFamily.PlayfairDisplay.bold.font(size: 18)
-        button.backgroundColor = UIColor(hexString: "#B77945")
-        button.rounded(radius: 18, borderWidth: 0, borderColor: .clear)
-        button.layer.shadowColor = UIColor(hexString: "#A36D45").cgColor
-        button.layer.shadowOpacity = 0.2
-        button.layer.shadowOffset = CGSize(width: 0, height: 12)
-        button.layer.shadowRadius = 18
+    private let startButton: PrimaryThemeButton = {
+        let button = PrimaryThemeButton(title: "Start Meditation")
         button.addTarget(self, action: #selector(startMeditationTapped), for: .touchUpInside)
         return button
     }()
@@ -46,12 +39,11 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "Meditation"
-        titleLabel.font = FontFamily.PlayfairDisplay.bold.font(size: 28)
-        titleLabel.textAlignment = .center
-        titleLabel.textColor = UIColor(hexString: "#4B3621")
-        
-        titleLabel.textAlignment = .center
-        
+        titleLabel.applyThemeTextStyle(
+            font: ThemeFont.display(),
+            color: ThemeColor.textPrimary,
+            alignment: .center
+        )
         return titleLabel
     }()
     
@@ -70,7 +62,7 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = ThemeColor.screenBackground
         setupUI()
         presenter?.viewDidLoad()
     }
@@ -94,19 +86,16 @@ final class MeditationMoodViewController: UIViewController, MeditationMoodViewab
     private func setupUI() {
         // Header title
         navigationController?.setNavigationBarHidden(true, animated: false)
-        view.backgroundColor = .colorFDF6ED
+        view.backgroundColor = ThemeColor.screenBackground
         
         [navView, moodQuestionLabel, introCardView, moodStackView, startButton, mediationTableView].forEach({view.addSubview($0)})
         introCardView.addSubview(introLabel)
 
-        introCardView.backgroundColor = UIColor.white.withAlphaComponent(0.58)
-        introCardView.layer.cornerRadius = 22
-        introCardView.layer.borderWidth = 1
-        introCardView.layer.borderColor = UIColor.white.withAlphaComponent(0.45).cgColor
-
-        introLabel.font = FontFamily.Inter28pt.medium.font(size: 14)
-        introLabel.textColor = UIColor(hexString: "#6E6257")
-        introLabel.numberOfLines = 0
+        introLabel.applyThemeTextStyle(
+            font: ThemeFont.bodyMedium(14),
+            color: ThemeColor.textSecondary,
+            numberOfLines: 0
+        )
         introLabel.text = "Choose the mood that best matches this moment, then start with a practice shaped for it."
 
         

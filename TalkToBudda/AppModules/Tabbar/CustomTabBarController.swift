@@ -37,7 +37,7 @@ final class CustomTabBarController: UITabBarController {
     
     private func setupViewControllers() {
         let tabs: [(UIViewController, String, String)] = [
-            (QuotesListViewController(), "Quotes", "tabbar1"),
+            (GuidanceViewController(), "Guidance", "tabbar1"),
             (MeditationMoodRouter.createModule(), "Meditation","tabbar2"),
             (HistoryWireframe().viewController, "History","tabbar3"),
             (ScriptureRouter.createModule(), "Scriptures", "tabbar4")

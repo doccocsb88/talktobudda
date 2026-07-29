@@ -11,19 +11,10 @@ import UIKit
 class OnboardingViewController: UIViewController {
     private let scrollView = UIScrollView()
     private let ambientView = UIView()
-    private lazy var nextButton: UIButton = {
-        let button = UIButton()
+    private lazy var nextButton: PrimaryThemeButton = {
+        let button = PrimaryThemeButton(title: "Start the Journey")
         button.isHidden = true
         button.isUserInteractionEnabled = true
-        button.setTitle("Start the Journey", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = FontFamily.PlayfairDisplay.bold.font(size: 18)
-        button.backgroundColor = UIColor(hexString: "#B77945")
-        button.rounded(radius: 16, borderWidth: 0, borderColor: .clear)
-        button.layer.shadowColor = UIColor(hexString: "#9E6A40").cgColor
-        button.layer.shadowOpacity = 0.24
-        button.layer.shadowOffset = CGSize(width: 0, height: 12)
-        button.layer.shadowRadius = 20
         button.addTarget(self, action: #selector(tappedNextButton(_:)), for: .touchUpInside)
         return button
     }()
@@ -56,7 +47,7 @@ class OnboardingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .colorE9D8C0
+        view.backgroundColor = ThemeColor.screenBackgroundMuted
 //        let gradientLayer = CAGradientLayer()
 //        gradientLayer.frame = view.bounds
 //        gradientLayer.colors = [
@@ -68,9 +59,22 @@ class OnboardingViewController: UIViewController {
 //        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
 //
 //        view.layer.insertSublayer(gradientLayer, at: 0)
-        pages = [(Asset.Assets.ob1Bg1.image, "Listen to Your Inner Self", "This AI-powered app helps you connect with the wisdom of Buddhism anytime, anywhere."),
-            (Asset.Assets.ob1Bg2.image , "The Path to Enlightenment", "Ask questions, share your thoughts, and meditate with AI inspired by Buddhist wisdom."),
-            (Asset.Assets.ob1Bg3.image, "Dwell in Mindfulness", "Begin your journey of inner peace today.")
+        pages = [
+            (
+                Asset.Assets.ob1Bg1.image,
+                "Begin with a trusted guide",
+                "Start with Buddha for calm, grounded guidance whenever you need a quiet place to begin."
+            ),
+            (
+                Asset.Assets.ob1Bg2.image,
+                "Choose the voice you need",
+                "Move between different guides for reflection, discipline, presence, or encouragement."
+            ),
+            (
+                Asset.Assets.ob1Bg3.image,
+                "Make space to return daily",
+                "Bring conversation, reflection, and meditation into one gentle ritual you can keep close."
+            )
         ]
 
         setupScrollView()

@@ -13,12 +13,26 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-splash" translatesAutoresizingMaskIntoConstraints="NO" id="m0W-fD-l9w">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.99215686274509807" green="0.96470588235294119" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="m0W-fD-l9w" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="8mP-4x-L6g"/>
+                            <constraint firstAttribute="bottom" secondItem="m0W-fD-l9w" secondAttribute="bottom" id="BlV-1t-1Qd"/>
+                            <constraint firstItem="m0W-fD-l9w" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="H6q-YU-qK4"/>
+                            <constraint firstAttribute="trailing" secondItem="m0W-fD-l9w" secondAttribute="trailing" id="t1a-5Y-ZhT"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <resources>
+                <image name="ic-splash" width="853" height="1844"/>
+            </resources>
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>

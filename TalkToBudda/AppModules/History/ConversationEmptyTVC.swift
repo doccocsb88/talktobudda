@@ -10,42 +10,41 @@ import SnapKit
 
 class ConversationEmptyTVC: UITableViewCell {
     private let lotusIcon: UIImageView = {
-         let imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.image = Asset.Assets.icLotus.image // Đặt tên file ảnh là "lotus_icon.png"
-         imageView.contentMode = .scaleAspectFit
-         return imageView
-     }()
-     
-     private let titleLabel: UILabel = {
-         let label = UILabel()
-         label.text = "No Conversations Yet"
-         label.font = FontFamily.FiraMono.medium.font(size: 18)
-         label.textColor = .color4B3621
-         label.textAlignment = .center
-         return label
-     }()
-     
-     private let subtitleLabel: UILabel = {
-         let label = UILabel()
-         label.text = "Start a conversation to see your journey here."
-         label.font = FontFamily.FiraMono.regular.font(size: 14)
-         label.textColor = .color7D5A4F
-         label.numberOfLines = 0
-         label.textAlignment = .center
-         return label
-     }()
-     
-     private let startButton: UIButton = {
-         let button = UIButton(type: .system)
-         button.setTitle("Begin Your Journey", for: .normal)
-         button.setTitleColor(.colorFDF6ED, for: .normal)
-         button.titleLabel?.font = FontFamily.FiraMono.medium.font(size: 18)
-         button.backgroundColor = .color7D5A4F
-         button.setTitleColor(.white, for: .normal)
-         button.layer.cornerRadius = 8
-         button.addTarget(self, action: #selector(beginJourneyTapped), for: .touchUpInside)
-         return button
-     }()
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = ThemeColor.textTertiary
+        return imageView
+    }()
+
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No Conversations Yet"
+        label.applyThemeTextStyle(
+            font: ThemeFont.eyebrowMono(18),
+            color: ThemeColor.textPrimary,
+            alignment: .center
+        )
+        return label
+    }()
+
+    private let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Start a conversation to see your journey here."
+        label.applyThemeTextStyle(
+            font: ThemeFont.eyebrowMono(14),
+            color: ThemeColor.textTertiary,
+            alignment: .center,
+            numberOfLines: 0
+        )
+        return label
+    }()
+
+    private lazy var startButton: PrimaryThemeButton = {
+        let button = PrimaryThemeButton(title: "Begin Your Journey")
+        button.addTarget(self, action: #selector(beginJourneyTapped), for: .touchUpInside)
+        return button
+    }()
     
     var tappedStartHandler: (()->())?
     
@@ -91,7 +90,7 @@ class ConversationEmptyTVC: UITableViewCell {
             make.top.equalTo(subtitleLabel.snp.bottom).offset(24)
             make.centerX.equalToSuperview()
             make.width.equalTo(240)
-            make.height.equalTo(44)
+            make.height.equalTo(54)
         }
     }
     

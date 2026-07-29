@@ -25,8 +25,11 @@ final class ScriptureInteractor: ScriptureInteractable {
         do {
             allScriptures = try JSONDecoder().decode([ScriptureEntity].self, from: data)
         } catch {}
-        
-        presenter?.view?.displayScriptures(allScriptures)
+
+        presenter?.view?.displayBrowseContent(
+            scriptures: allScriptures,
+            collections: buildCollections(from: allScriptures)
+        )
     }
 
     func search(keyword: String) {
@@ -39,16 +42,74 @@ final class ScriptureInteractor: ScriptureInteractable {
                 $0.description.lowercased().contains(keyword.lowercased())
             }
         }
-       
-        presenter?.view?.displayScriptures(filtered)
+
+        presenter?.view?.displaySearchResults(filtered)
     }
 
     func filter(by category: String) {
         if category == "All" {
-            presenter?.view?.displayScriptures(allScriptures)
+            presenter?.view?.displaySearchResults(allScriptures)
             return
         }
         let filtered = allScriptures.filter { $0.tags.contains(category) }
-        presenter?.view?.displayScriptures(filtered)
+        presenter?.view?.displaySearchResults(filtered)
+    }
+
+    private func buildCollections(from scriptures: [ScriptureEntity]) -> [ScriptureCollectionEntity] {
+        let order: [ResourceTag] = [
+            .minorCollection,
+            .middleDiscourses,
+            .linkedDiscourses,
+            .numberedDiscourses,
+            .longDiscourses
+        ]
+
+        let grouped = Dictionary(grouping: scriptures, by: \.resourceTag)
+        return order.compactMap { tag in
+            guard grouped[tag]?.isEmpty == false else { return nil }
+            return ScriptureCollectionEntity(
+                title: title(for: tag),
+                subtitle: subtitle(for: tag),
+                resourceTag: tag
+            )
+        }
+    }
+
+    private func title(for tag: ResourceTag) -> String {
+        switch tag {
+        case .minorCollection:
+            return "Dhammapada"
+        case .middleDiscourses:
+            return "Majjhima Nikaya"
+        case .linkedDiscourses:
+            return "Samyutta Nikaya"
+        case .numberedDiscourses:
+            return "Anguttara Nikaya"
+        case .longDiscourses:
+            return "Sutta Nipata"
+        case .vinayaPitaka:
+            return "Vinaya Pitaka"
+        case .abhidhammaPitaka:
+            return "Abhidhamma Pitaka"
+        }
+    }
+
+    private func subtitle(for tag: ResourceTag) -> String {
+        switch tag {
+        case .minorCollection:
+            return "Verses on the path of wisdom"
+        case .middleDiscourses:
+            return "Middle Length Discourses"
+        case .linkedDiscourses:
+            return "Connected Discourses"
+        case .numberedDiscourses:
+            return "Numerical Discourses"
+        case .longDiscourses:
+            return "Ancient inspired verses"
+        case .vinayaPitaka:
+            return "Monastic discipline"
+        case .abhidhammaPitaka:
+            return "Analytical teachings"
+        }
     }
 }
