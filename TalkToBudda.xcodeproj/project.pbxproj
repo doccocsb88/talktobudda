@@ -347,6 +347,7 @@
 				DEVELOPMENT_TEAM = F59XSVKP6X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TalkToBudda/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Inner Voices";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -358,7 +359,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = hai.codetu.TalkToBudda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -381,6 +382,7 @@
 				DEVELOPMENT_TEAM = F59XSVKP6X;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TalkToBudda/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Inner Voices";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -392,7 +394,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = hai.codetu.TalkToBudda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

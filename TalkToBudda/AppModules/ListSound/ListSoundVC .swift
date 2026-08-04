@@ -62,6 +62,8 @@ class ListSoundView: UIViewController {
             .subscribe(onNext: {[weak self] state, sound in
                 self?.selectedSound = sound
                 self?.state = state
+                self?.saveButton.isEnabled = sound != nil
+                self?.updateSaveButtonAppearance()
                 self?.tableView.reloadData()
             })
     }
@@ -152,6 +154,13 @@ class ListSoundView: UIViewController {
         MeditationAudioPlayer.shared.playMeditationSound(sound: sound)
         dismiss(animated: true)
     }
+
+    private func selectSoundForPreview(_ sound: SoundCodable) {
+        selectedSound = sound
+        saveButton.isEnabled = true
+        updateSaveButtonAppearance()
+        soundPlayer.playMeditationSound(sound: sound)
+    }
 }
 
 extension ListSoundView: UITableViewDelegate, UITableViewDataSource {
@@ -174,7 +183,7 @@ extension ListSoundView: UITableViewDelegate, UITableViewDataSource {
             if sound == self?.selectedSound {
                 self?.soundPlayer.togglePlayPause()
             } else {
-                self?.soundPlayer.playMeditationSound(sound: sound)
+                self?.selectSoundForPreview(sound)
             }
         }
         return cell
@@ -185,11 +194,8 @@ extension ListSoundView: UITableViewDelegate, UITableViewDataSource {
         print("Selected sound: \(selectedSound)")
         // Logic để phát âm thanh hoặc chuyển về màn hình thiền với âm thanh đã chọn
         tableView.deselectRow(at: indexPath, animated: true)
-        
-//        PreferenceService.shared.meditationSound = selectedSound
-        soundPlayer.playMeditationSound(sound: selectedSound)
-        saveButton.isEnabled = true
-        updateSaveButtonAppearance()
+
+        selectSoundForPreview(selectedSound)
     }
 
     private func updateSaveButtonAppearance() {

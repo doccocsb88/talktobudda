@@ -58,6 +58,8 @@ final class GuidanceViewController: UIViewController {
     private let guideSectionView = MutedThemeCardView()
     private let guideSectionTitleLabel = UILabel()
     private let guideSectionBodyLabel = UILabel()
+    private let guideCardsScrollView = UIScrollView()
+    private let guideCardsContentView = UIView()
     private let guideCardsStackView = UIStackView()
     private let seeAllGuidesButton = UIButton(type: .system)
 
@@ -221,8 +223,14 @@ final class GuidanceViewController: UIViewController {
             numberOfLines: 0
         )
 
-        guideCardsStackView.axis = .vertical
-        guideCardsStackView.spacing = 12
+        guideCardsScrollView.showsHorizontalScrollIndicator = false
+        guideCardsScrollView.alwaysBounceHorizontal = false
+        guideCardsScrollView.isScrollEnabled = false
+
+        guideCardsStackView.axis = .horizontal
+        guideCardsStackView.alignment = .fill
+        guideCardsStackView.distribution = .fillEqually
+        guideCardsStackView.spacing = 10
 
         seeAllGuidesButton.setTitle("See all guides", for: .normal)
         seeAllGuidesButton.setTitleColor(UIColor(hexString: "#8F6A41"), for: .normal)
@@ -230,7 +238,10 @@ final class GuidanceViewController: UIViewController {
         seeAllGuidesButton.contentHorizontalAlignment = .left
         seeAllGuidesButton.addTarget(self, action: #selector(showAllGuidesTapped), for: .touchUpInside)
 
-        [guideSectionTitleLabel, guideSectionBodyLabel, guideCardsStackView, seeAllGuidesButton].forEach(guideSectionView.addSubview)
+        guideCardsScrollView.addSubview(guideCardsContentView)
+        guideCardsContentView.addSubview(guideCardsStackView)
+
+        [guideSectionTitleLabel, guideSectionBodyLabel, guideCardsScrollView, seeAllGuidesButton].forEach(guideSectionView.addSubview)
         stackView.addArrangedSubview(guideSectionView)
 
         guideSectionTitleLabel.snp.makeConstraints { make in
@@ -242,13 +253,25 @@ final class GuidanceViewController: UIViewController {
             make.left.right.equalToSuperview().inset(18)
         }
 
-        guideCardsStackView.snp.makeConstraints { make in
+        guideCardsScrollView.snp.makeConstraints { make in
             make.top.equalTo(guideSectionBodyLabel.snp.bottom).offset(14)
-            make.left.right.equalToSuperview().inset(18)
+            make.left.right.equalToSuperview().inset(12)
+            make.height.equalTo(182)
+        }
+
+        guideCardsContentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.height.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+
+        guideCardsStackView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.height.equalToSuperview()
         }
 
         seeAllGuidesButton.snp.makeConstraints { make in
-            make.top.equalTo(guideCardsStackView.snp.bottom).offset(12)
+            make.top.equalTo(guideCardsScrollView.snp.bottom).offset(12)
             make.left.right.equalToSuperview().inset(18)
             make.bottom.equalToSuperview().inset(18)
         }
@@ -353,7 +376,6 @@ final class GuidanceViewController: UIViewController {
         }
 
         for characterType in featuredCharacters {
-            if characterType == recommendedCharacter { continue }
             guideCardsStackView.addArrangedSubview(makeGuideCard(for: characterType))
         }
     }
@@ -366,61 +388,47 @@ final class GuidanceViewController: UIViewController {
         let avatarView = UIImageView(image: character.avatarImage)
         avatarView.contentMode = .scaleAspectFill
         avatarView.backgroundColor = ThemeColor.surfaceBadge
-        avatarView.layer.cornerRadius = 24
+        avatarView.layer.cornerRadius = 34
         avatarView.clipsToBounds = true
 
         let nameLabel = UILabel()
         nameLabel.text = character.name
-        nameLabel.applyThemeTextStyle(font: ThemeFont.cta(), color: ThemeColor.textPrimary)
-
-        let tagLabel = ThemeChipLabel()
-        tagLabel.text = character.bestForLabel
-
-        let descriptionLabel = UILabel()
-        descriptionLabel.text = character.handoffSummary
-        descriptionLabel.applyThemeTextStyle(
-            font: ThemeFont.body(13),
-            color: ThemeColor.textSecondary,
-            numberOfLines: 2
+        nameLabel.applyThemeTextStyle(
+            font: ThemeFont.sectionTitle(16),
+            color: ThemeColor.textPrimary,
+            alignment: .center, numberOfLines: 2
         )
 
-        let chevronView = UIImageView(image: UIImage(systemName: "chevron.right"))
-        chevronView.tintColor = ThemeColor.textTertiary
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = character.bestForLabel
+        descriptionLabel.applyThemeTextStyle(
+            font: ThemeFont.body(11),
+            color: ThemeColor.textSecondary,
+            alignment: .center, numberOfLines: 2
+        )
+        descriptionLabel.lineBreakMode = .byWordWrapping
 
-        [avatarView, nameLabel, tagLabel, descriptionLabel, chevronView].forEach(cardView.addSubview)
+        [avatarView, nameLabel, descriptionLabel].forEach(cardView.addSubview)
 
         avatarView.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(14)
-            make.centerY.equalToSuperview()
-            make.width.height.equalTo(48)
+            make.top.equalToSuperview().inset(14)
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(68)
         }
 
         nameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(14)
-            make.left.equalTo(avatarView.snp.right).offset(12)
-            make.right.lessThanOrEqualTo(chevronView.snp.left).offset(-10)
-        }
-
-        tagLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameLabel.snp.bottom).offset(6)
-            make.left.equalTo(nameLabel)
-            make.height.equalTo(18)
+            make.top.equalTo(avatarView.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(8)
         }
 
         descriptionLabel.snp.makeConstraints { make in
-            make.top.equalTo(tagLabel.snp.bottom).offset(6)
-            make.left.equalTo(nameLabel)
-            make.right.equalToSuperview().inset(42)
-            make.bottom.equalToSuperview().inset(14)
-        }
-
-        chevronView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().inset(14)
+            make.top.equalTo(nameLabel.snp.bottom).offset(6)
+            make.left.right.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().inset(10)
         }
 
         cardView.snp.makeConstraints { make in
-            make.height.greaterThanOrEqualTo(108)
+            make.height.equalTo(182)
         }
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(featuredGuideTapped(_:)))

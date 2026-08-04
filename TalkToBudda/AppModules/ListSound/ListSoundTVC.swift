@@ -11,7 +11,7 @@ import SnapKit
 class ListSoundTVC: UITableViewCell {
     private let cardView = UIView()
     private let accentBar = UIView()
-    private let selectionBadge = UILabel()
+    private let textStackView = UIStackView()
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .color4B3621
@@ -50,18 +50,14 @@ class ListSoundTVC: UITableViewCell {
 
         accentBar.backgroundColor = UIColor(hexString: "#D1A35B")
         accentBar.layer.cornerRadius = 2
-        
-        selectionBadge.text = "Selected"
-        selectionBadge.textAlignment = .center
-        selectionBadge.textColor = UIColor(hexString: "#8B6438")
-        selectionBadge.backgroundColor = UIColor(hexString: "#F8E8C8")
-        selectionBadge.font = FontFamily.Inter28pt.medium.font(size: 10)
-        selectionBadge.layer.cornerRadius = 9
-        selectionBadge.clipsToBounds = true
-        selectionBadge.isHidden = true
+
+        textStackView.axis = .vertical
+        textStackView.alignment = .fill
+        textStackView.spacing = 4
 
         contentView.addSubview(cardView)
-        [accentBar, nameLabel, subtitleLabel, pausePlayButton, selectionBadge].forEach(cardView.addSubview)
+        [accentBar, textStackView, pausePlayButton].forEach(cardView.addSubview)
+        [nameLabel, subtitleLabel].forEach(textStackView.addArrangedSubview)
 
         cardView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16))
@@ -74,24 +70,10 @@ class ListSoundTVC: UITableViewCell {
             make.height.equalTo(34)
         }
 
-        nameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(14)
+        textStackView.snp.makeConstraints { make in
             make.left.equalTo(accentBar.snp.right).offset(12)
             make.right.equalTo(pausePlayButton.snp.left).offset(-12)
-        }
-        
-        selectionBadge.snp.makeConstraints { make in
-            make.left.equalTo(nameLabel)
-            make.top.equalTo(nameLabel.snp.bottom).offset(6)
-            make.height.equalTo(18)
-            make.width.greaterThanOrEqualTo(62)
-        }
-
-        subtitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(selectionBadge.snp.bottom).offset(6)
-            make.left.equalTo(nameLabel)
-            make.right.equalTo(nameLabel)
-            make.bottom.equalToSuperview().inset(14)
+            make.centerY.equalToSuperview()
         }
         
         pausePlayButton.snp.makeConstraints { make in
@@ -111,7 +93,6 @@ class ListSoundTVC: UITableViewCell {
         nameLabel.text = sound.title.capitalized
         subtitleLabel.text = playing ? "Previewing now" : (selected ? "Ready to save" : "Tap to preview")
         pausePlayButton.isSelected = playing
-        selectionBadge.isHidden = !selected
         cardView.backgroundColor = playing ? UIColor(hexString: "#FFF2D5") : (selected ? UIColor(hexString: "#FFF8EB") : UIColor.white.withAlphaComponent(0.5))
         cardView.layer.borderColor = (playing ? UIColor(hexString: "#D6A85D") : (selected ? UIColor(hexString: "#E1BC7E") : UIColor(hexString: "#E6D7C1"))).cgColor
         accentBar.backgroundColor = playing ? UIColor(hexString: "#B8822E") : (selected ? UIColor(hexString: "#C99A4A") : UIColor(hexString: "#D1A35B"))

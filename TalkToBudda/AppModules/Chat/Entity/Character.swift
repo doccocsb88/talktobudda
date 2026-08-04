@@ -144,6 +144,31 @@ enum CharacterType: String, Codable, PersistableEnum, CaseIterable {
             return "Best when you want sharper questions, self-examination, and clearer thinking."
         }
     }
+
+    var featuredCardSubtitle: String {
+        switch self {
+        case .buddha:
+            return "See things with new eyes"
+        case .monk:
+            return "Strengthen daily habits and focus"
+        case .zenMaster:
+            return "Explore deeper wisdom within"
+        case .meditationGuide:
+            return "Return to breath with steady guidance"
+        case .spiritualTeacher:
+            return "Reflect on meaning with grounded support"
+        case .jesus:
+            return "Lean into love, mercy, and forgiveness"
+        case .mary:
+            return "Receive comfort, care, and reassurance"
+        case .wisePhilosopher:
+            return "Broaden perspective through timeless ideas"
+        case .marcusAurelius:
+            return "Practice resilience and self-command"
+        case .socrates:
+            return "Question assumptions and think more clearly"
+        }
+    }
     
     var avatarImageName: String {
         switch self {
@@ -362,5 +387,9 @@ struct Character: Codable {
 
     var handoffSummary: String {
         return type.handoffSummary
+    }
+
+    var featuredCardSubtitle: String {
+        return type.featuredCardSubtitle
     }
 }

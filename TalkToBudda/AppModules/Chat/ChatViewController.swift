@@ -19,7 +19,6 @@ class ChatViewController: UIViewController, ChatViewable {
     private var selectedCharacter: CharacterType?
     private lazy var selectedGuide = Character(type: .buddha)
     private let dockContainerView = UIView()
-    private var handoffCardTopConstraint: Constraint?
     private var tableTopConstraint: Constraint?
     private lazy var navView: UIView = {
         let view = UIView()
@@ -39,29 +38,22 @@ class ChatViewController: UIViewController, ChatViewable {
         return button
     }()
 
-    private lazy var characterButton: UIButton = {
+    private lazy var guideListButton: UIButton = {
         let button = UIButton()
         button.isHidden = true
-        button.setTitle("Choose Guide", for: .normal)
-        button.setTitleColor(.color4B3621, for: .normal)
-        button.titleLabel?.font = FontFamily.Inter28pt.medium.font(size: 15)
-        button.backgroundColor = UIColor(hexString: "#F7ECDD")
-        button.layer.cornerRadius = 20
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor(hexString: "#E9D7BD").cgColor
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 34)
-        button.semanticContentAttribute = .forceRightToLeft
-        let iconConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium)
-        button.setImage(UIImage(systemName: "chevron.down", withConfiguration: iconConfig), for: .normal)
-        button.tintColor = UIColor(hexString: "#9D7B54")
+        let iconConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
+        button.setImage(UIImage(systemName: "person.2", withConfiguration: iconConfig), for: .normal)
+        button.tintColor = .color4B3621
+        button.backgroundColor = UIColor(hexString: "#F7EFE5")
+        button.layer.cornerRadius = 22
         button.addTarget(self, action: #selector(tappedCharacterButton(_:)), for: .touchUpInside)
         return button
     }()
 
     private lazy var subtitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Mindfulness guide"
-        label.font = FontFamily.Inter28pt.regular.font(size: 15)
+        label.text = "Best for calm reflection"
+        label.font = FontFamily.Inter28pt.medium.font(size: 13)
         label.textColor = UIColor(hexString: "#7A624B")
         label.textAlignment = .center
         label.numberOfLines = 1
@@ -74,55 +66,6 @@ class ChatViewController: UIViewController, ChatViewable {
         label.font = FontFamily.PlayfairDisplay.bold.font(size: 28)
         label.textAlignment = .center
         label.textColor = UIColor(hexString: "#4B3621")
-        label.numberOfLines = 2
-        return label
-    }()
-
-    private lazy var handoffCardView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(hexString: "#FCF8F3")
-        view.layer.cornerRadius = 22
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(hexString: "#EBDCCD").cgColor
-        return view
-    }()
-
-    private lazy var handoffAvatarView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = selectedGuide.avatarImage
-        imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = UIColor(hexString: "#F4E8D8")
-        imageView.layer.cornerRadius = 18
-        imageView.clipsToBounds = true
-        return imageView
-    }()
-
-    private lazy var handoffBadgeLabel: UILabel = {
-        let label = UILabel()
-        label.text = selectedGuide.bestForLabel
-        label.font = FontFamily.Inter28pt.medium.font(size: 11)
-        label.textColor = UIColor(hexString: "#8A6A4B")
-        label.backgroundColor = UIColor(hexString: "#F7F0E5")
-        label.textAlignment = .center
-        label.layer.cornerRadius = 9
-        label.clipsToBounds = true
-        return label
-    }()
-
-    private lazy var handoffTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "With \(selectedGuide.name)"
-        label.font = FontFamily.PlayfairDisplay.bold.font(size: 18)
-        label.textColor = UIColor(hexString: "#4B3621")
-        label.numberOfLines = 0
-        return label
-    }()
-
-    private lazy var handoffBodyLabel: UILabel = {
-        let label = UILabel()
-        label.text = selectedGuide.handoffSummary
-        label.font = FontFamily.Inter28pt.regular.font(size: 13)
-        label.textColor = UIColor(hexString: "#755F4A")
         label.numberOfLines = 1
         return label
     }()
@@ -191,7 +134,6 @@ class ChatViewController: UIViewController, ChatViewable {
     private func setupUI() {
         view.backgroundColor = .colorFDF6ED
         view.addSubview(navView)
-        view.addSubview(handoffCardView)
         view.addSubview(tableView)
         view.addSubview(dockContainerView)
 
@@ -199,13 +141,9 @@ class ChatViewController: UIViewController, ChatViewable {
         dockContainerView.addSubview(inputBar)
 
         navView.addSubview(backButton)
-        navView.addSubview(characterButton)
+        navView.addSubview(guideListButton)
         navView.addSubview(subtitleLabel)
         navView.addSubview(titleLabel)
-        handoffCardView.addSubview(handoffAvatarView)
-        handoffCardView.addSubview(handoffBadgeLabel)
-        handoffCardView.addSubview(handoffTitleLabel)
-        handoffCardView.addSubview(handoffBodyLabel)
 
         premiumPromptView.addSubview(premiumIconView)
         premiumPromptView.addSubview(chatCountLabel)
@@ -240,44 +178,14 @@ class ChatViewController: UIViewController, ChatViewable {
 
         navView.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
-            make.height.equalTo(112)
+            make.height.equalTo(84)
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-        }
-
-        handoffCardView.snp.makeConstraints { make in
-            handoffCardTopConstraint = make.top.equalTo(navView.snp.bottom).offset(8).constraint
-            make.left.right.equalToSuperview().inset(24)
         }
 
         tableView.snp.makeConstraints { make in
             make.left.right.equalToSuperview()
-            tableTopConstraint = make.top.equalTo(handoffCardView.snp.bottom).offset(6).constraint
+            tableTopConstraint = make.top.equalTo(navView.snp.bottom).offset(8).constraint
             make.bottom.equalTo(dockContainerView.snp.top).offset(-10)
-        }
-
-        handoffAvatarView.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(16)
-            make.top.equalToSuperview().inset(14)
-            make.width.height.equalTo(36)
-        }
-
-        handoffBadgeLabel.snp.makeConstraints { make in
-            make.left.equalTo(handoffAvatarView.snp.right).offset(12)
-            make.top.equalToSuperview().inset(14)
-            make.height.equalTo(18)
-        }
-
-        handoffTitleLabel.snp.makeConstraints { make in
-            make.left.equalTo(handoffBadgeLabel)
-            make.top.equalTo(handoffBadgeLabel.snp.bottom).offset(4)
-            make.right.equalToSuperview().inset(16)
-        }
-
-        handoffBodyLabel.snp.makeConstraints { make in
-            make.left.equalTo(handoffTitleLabel)
-            make.top.equalTo(handoffTitleLabel.snp.bottom).offset(2)
-            make.right.equalToSuperview().inset(16)
-            make.bottom.equalToSuperview().inset(12)
         }
 
         dockContainerView.snp.makeConstraints { make in
@@ -322,24 +230,23 @@ class ChatViewController: UIViewController, ChatViewable {
             make.top.equalToSuperview().offset(6)
         }
 
-        characterButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(8)
-            make.height.equalTo(40)
-        }
-
-        subtitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(characterButton.snp.bottom).offset(14)
-            make.leading.trailing.equalToSuperview().inset(24)
+        guideListButton.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(24)
+            make.width.height.equalTo(44)
+            make.centerY.equalTo(backButton)
         }
 
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(subtitleLabel.snp.bottom).offset(2)
-            make.leading.trailing.equalToSuperview().inset(24)
+            make.top.equalToSuperview().offset(6)
+            make.left.greaterThanOrEqualTo(backButton.snp.right).offset(12)
+            make.right.lessThanOrEqualTo(guideListButton.snp.left).offset(-12)
             make.centerX.equalToSuperview()
         }
 
-        refreshGuideHandoff()
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(2)
+            make.leading.trailing.equalToSuperview().inset(72)
+        }
     }
 
     @objc private func didTapTag(_ sender: UIButton) {
@@ -380,11 +287,9 @@ class ChatViewController: UIViewController, ChatViewable {
 
         if let character = selectedCharacter {
             selectedGuide = Character(type: character)
-            characterButton.isHidden = false
-            characterButton.setTitle(character.displayName, for: .normal)
+            guideListButton.isHidden = false
             titleLabel.text = character.displayName
-            subtitleLabel.text = selectedGuide.chatSubtitle
-            refreshGuideHandoff()
+            subtitleLabel.text = selectedGuide.bestForLabel
         }
     }
 
@@ -445,7 +350,6 @@ class ChatViewController: UIViewController, ChatViewable {
 
     private func updateConversationLayout(isPremium: Bool) {
         premiumPromptView.alpha = isPremium ? 0 : 1
-        handoffCardTopConstraint?.update(offset: 8)
         tableTopConstraint?.update(offset: messages.count <= 1 ? 12 : 6)
     }
 
@@ -555,12 +459,5 @@ extension ChatViewController: CharacterSelectionDelegate {
         presenter?.restartConversation(with: character)
 
         presentedViewController?.dismiss(animated: true)
-    }
-
-    private func refreshGuideHandoff() {
-        handoffAvatarView.image = selectedGuide.avatarImage
-        handoffBadgeLabel.text = selectedGuide.bestForLabel
-        handoffTitleLabel.text = "With \(selectedGuide.name)"
-        handoffBodyLabel.text = selectedGuide.handoffSummary
     }
 }
