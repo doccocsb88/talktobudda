@@ -11,6 +11,7 @@ Use this loop when:
 Structure:
 - `AGENTS.md`: operating rules for the screenshot loop
 - `input/current-screenshot-brief.md`: current product and positioning brief
+- `input/approved-reference-set.md`: locked 6-screen baseline and alignment spec
 - `input/six-shot-plan.md`: the required 6-screenshot sales narrative
 - `input/generation-prompt-template.md`: reusable prompt template for screenshot generation
 - `input/evaluation-rubric.md`: reusable scoring rubric for screenshot quality
@@ -36,3 +37,8 @@ Expected outcome per run:
 - generation prompts used
 - evaluation of which screens are strongest or weak
 - recommendation on whether the set is ready for a final export pass
+
+Current baseline:
+- the 6-page board in `/Users/mac/Downloads/Group 4.png` is the approved direction
+- the default next step is production alignment, not concept exploration
+- the main polish targets are crop consistency and equal placement of mockup, headline, and subtitle

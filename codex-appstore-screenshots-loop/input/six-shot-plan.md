@@ -2,6 +2,9 @@
 
 Each screenshot should sell one idea.
 
+This plan is now locked to the approved reference set in `input/approved-reference-set.md`.
+Do not replace the structure below unless the brief explicitly asks for a new direction.
+
 ## Screen 1: Positioning Hook
 
 Purpose:
@@ -39,16 +42,16 @@ Message territory:
 - daily moments of stillness
 - grounding practices and presence
 
-## Screen 5: Return Anytime
+## Screen 5: Return to Yourself
 
 Purpose:
 - sell retention and trust
 
 Message territory:
-- a guide in your pocket
+- simple practices to calm the mind
 - support throughout the day
 
-## Screen 6: Close With Brand Promise
+## Screen 6: Read, Reflect, Return
 
 Purpose:
 - leave one memorable emotional promise
@@ -64,3 +67,4 @@ Message territory:
 - no paragraph copy
 - no feature checklist language
 - no overloaded screenshots
+- keep headline, subtitle, and mockup alignment system-consistent across all 6 screens
